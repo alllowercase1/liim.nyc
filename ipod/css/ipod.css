@@ -978,6 +978,54 @@ body {
     width: 56vh;
     height: 94vh;
     padding: 2.5vh 2.5vh 4vh 2.5vh;
+    position: relative;
+    box-shadow:
+      /* Drop shadow underneath */
+      0 30px 60px rgba(0, 0, 0, 0.5),
+      0 15px 30px rgba(0, 0, 0, 0.4),
+      /* Inner highlights */
+      inset 1px 1px 0 rgba(255, 255, 255, 0.1),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Left chrome bezel edge */
+  .ipod-device::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: -6px;
+    width: 6px;
+    height: calc(100% - 16px);
+    background: linear-gradient(90deg,
+      #8a8a8a 0%,
+      #c0c0c0 20%,
+      #e8e8e8 40%,
+      #c0c0c0 60%,
+      #a0a0a0 100%);
+    border-radius: 8px 0 0 8px;
+    box-shadow:
+      -2px 0 4px rgba(0, 0, 0, 0.3),
+      inset 1px 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  /* Bottom chrome bezel edge */
+  .ipod-device::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 8px;
+    width: calc(100% - 16px);
+    height: 6px;
+    background: linear-gradient(180deg,
+      #a0a0a0 0%,
+      #c0c0c0 30%,
+      #e0e0e0 50%,
+      #b0b0b0 70%,
+      #808080 100%);
+    border-radius: 0 0 8px 8px;
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.4),
+      inset 0 1px 1px rgba(255, 255, 255, 0.3);
   }
 
   .ipod-screen {
