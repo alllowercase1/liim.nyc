@@ -907,6 +907,25 @@ body {
     min-height: 32px;
   }
 
+  .show-date,
+  .news-headline,
+  .merch-name,
+  .merch-price {
+    font-size: 16px;
+  }
+
+  .show-info {
+    font-size: 14px;
+  }
+
+  .news-source {
+    font-size: 11px;
+  }
+
+  .news-preview {
+    font-size: 11px;
+  }
+
   .wheel-button.menu-btn {
     top: 8%;
     font-size: 10px;
