@@ -842,17 +842,17 @@
   }
 
   // ============================================
-  // Scroll Wheel Support (Desktop)
+  // Scroll Wheel Support (Desktop - hover over click wheel)
   // ============================================
   let scrollAccumulator = 0;
   const scrollThreshold = 50;
 
   function initScrollWheelSupport() {
-    // Only enable on desktop (non-touch devices or wide screens)
+    // Only enable on desktop
     if (window.innerWidth < 1025) return;
 
-    // Listen on the entire document so scrolling anywhere works
-    document.addEventListener('wheel', function(e) {
+    // Listen only on the click wheel element
+    clickWheel.addEventListener('wheel', function(e) {
       e.preventDefault();
 
       scrollAccumulator += e.deltaY;
