@@ -845,7 +845,7 @@
   // Scroll Wheel Support (Desktop - hover over click wheel)
   // ============================================
   let scrollAccumulator = 0;
-  const scrollThreshold = 50;
+  const scrollThreshold = 25;
 
   function initScrollWheelSupport() {
     // Only enable on desktop
