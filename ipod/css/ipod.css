@@ -975,61 +975,66 @@ body {
 /* Desktop */
 @media (min-width: 1025px) {
   .ipod-device {
-    width: 380px;
-    height: 640px;
-    padding: 24px 24px 36px 24px;
+    width: 440px;
+    height: 740px;
+    padding: 28px 28px 42px 28px;
   }
 
   .ipod-screen {
-    height: 240px;
-    margin-bottom: 30px;
+    height: 280px;
+    margin-bottom: 36px;
   }
 
   .screen-header {
-    height: 26px;
+    height: 30px;
   }
 
   .header-title {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .click-wheel {
-    width: 240px;
-    height: 240px;
+    width: 280px;
+    height: 280px;
   }
 
   .center-button {
-    width: 82px;
-    height: 82px;
+    width: 96px;
+    height: 96px;
   }
 
   .menu-item {
-    font-size: 16px;
-    padding: 6px 12px;
-    min-height: 28px;
+    font-size: 18px;
+    padding: 8px 14px;
+    min-height: 32px;
   }
 
   .wheel-button.menu-btn {
-    font-size: 11px;
-    top: 18px;
+    font-size: 12px;
+    top: 22px;
   }
 
   .wheel-button.play-btn {
-    font-size: 14px;
-    bottom: 18px;
+    font-size: 16px;
+    bottom: 22px;
   }
 
   .wheel-button.prev-btn,
   .wheel-button.next-btn {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .wheel-button.prev-btn {
-    left: 20px;
+    left: 24px;
   }
 
   .wheel-button.next-btn {
-    right: 20px;
+    right: 24px;
+  }
+
+  .wheel-button svg {
+    width: 20px;
+    height: 14px;
   }
 }
 

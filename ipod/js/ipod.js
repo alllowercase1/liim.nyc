@@ -848,7 +848,11 @@
   const scrollThreshold = 50;
 
   function initScrollWheelSupport() {
-    document.querySelector('.ipod-screen').addEventListener('wheel', function(e) {
+    // Only enable on desktop (non-touch devices or wide screens)
+    if (window.innerWidth < 1025) return;
+
+    // Listen on the entire document so scrolling anywhere works
+    document.addEventListener('wheel', function(e) {
       e.preventDefault();
 
       scrollAccumulator += e.deltaY;
