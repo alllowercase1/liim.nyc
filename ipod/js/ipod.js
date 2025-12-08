@@ -47,27 +47,27 @@
     }
   }
 
-  const albumPath = 'ipod/assets/music/liim lasalle loves you/';
+  const albumPath = 'ipod/assets/music/Liim Lasalle Loves You/';
   const albumCover = albumPath + 'Liim Lasalle Loves You 2.png';
 
   const trackList = [
-    { title: 'Radio Advice', file: 'RADIO ADVICE.wav' },
-    { title: 'For The Both Of Us', file: 'FOR THE BOTH OF US.wav' },
-    { title: 'Clutching My Breaks', file: 'CLUTCHING MY BREAKS.wav' },
-    { title: 'Mezcal', file: 'MEZCAL.wav' },
-    { title: 'Why Why', file: 'WHY WHY.wav' },
-    { title: 'Hope', file: 'HOPE.wav' },
-    { title: 'Two Summers', file: 'TWO SUMMERS.wav' },
+    { title: 'Radio Advice', file: 'Radio Advice.wav' },
+    { title: 'For The Both Of Us', file: 'For The Both Of Us.wav' },
+    { title: 'Clutching My Breaks', file: 'Clutching My Breaks.wav' },
+    { title: 'Mezcal', file: 'Mezcal.wav' },
+    { title: 'Why Why', file: 'Why Why.wav' },
+    { title: 'Hope', file: 'Hope.wav' },
+    { title: 'Two Summers', file: 'Two Summers.wav' },
     { title: 'Shams Love Song', file: 'Shams Love Song.wav' },
-    { title: 'Sahara Freestyle', file: 'SAHARA FREESTYLE.wav' },
-    { title: 'Rollin Around', file: 'ROLLIN AROUND.wav' },
-    { title: 'Break', file: 'BREAK.wav' },
-    { title: 'Le Pouvoir Noir (ft. N8SHO)', file: 'LE POUVOIR NOIR (ft. N8SHO).wav' },
-    { title: 'Playin Yoself', file: 'PLAYIN YO SELF.wav' },
-    { title: 'Doin Thangs', file: 'DOIN THANGS.wav' },
-    { title: 'Important To Ya', file: 'IMPORTANT TO YA.wav' },
-    { title: 'Kicked Rocks', file: 'KICKED ROCKS.wav' },
-    { title: 'Liim Lasalle Loves You', file: 'LIIM LASALLE LOVES YOU.wav' }
+    { title: 'Sahara Freestyle', file: 'Sahara Freestyle.wav' },
+    { title: 'Rollin Around', file: 'Rollin Around.wav' },
+    { title: 'Break', file: 'Break.wav' },
+    { title: 'Le Pouvoir Noir (ft. N8SHO)', file: 'Le Pouvoir Noir (ft. N8SHO).wav' },
+    { title: 'Playin Yoself', file: 'Playin Yoself.wav' },
+    { title: 'Doin Thangs', file: 'Doin Thangs.wav' },
+    { title: 'Important To Ya', file: 'Important To Ya.wav' },
+    { title: 'Kicked Rocks', file: 'Kicked Rocks.wav' },
+    { title: 'Liim Lasalle Loves You', file: 'Liim Lasalle Loves You.wav' }
   ];
 
   const playerState = {
