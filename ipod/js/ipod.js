@@ -26,7 +26,7 @@
       sourceNode = audioContext.createMediaElementSource(audioPlayer);
       sourceNode.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      gainNode.gain.value = currentVolume;
+      gainNode.gain.value = volumeToGain(currentVolume);
       audioInitialized = true;
     } catch(e) {
       console.log('Web Audio API not supported:', e);
@@ -189,9 +189,9 @@
     audioPlayer.src = albumPath + encodeURIComponent(track.file);
     audioPlayer.play();
 
-    // Apply current volume
+    // Apply current volume with logarithmic scaling
     if (gainNode) {
-      gainNode.gain.value = currentVolume;
+      gainNode.gain.value = volumeToGain(currentVolume);
     }
 
     // Update UI
@@ -233,22 +233,30 @@
   }
 
   // Track volume separately since iOS ignores audioPlayer.volume
-  let currentVolume = 0.7;
+  let currentVolume = 0.5;
   let volumeDisplayTimeout = null;
+
+  // Convert linear slider to logarithmic gain (more natural for human hearing)
+  function volumeToGain(vol) {
+    if (vol === 0) return 0;
+    // Attempt cubic curve for smoother low-end control
+    return Math.pow(vol, 3);
+  }
 
   function adjustVolume(direction) {
     // Adjust volume by 5% per step
     currentVolume = currentVolume + (direction * 0.05);
     currentVolume = Math.max(0, Math.min(1, currentVolume));
 
-    // Use Web Audio API gain node for actual volume control
+    // Use Web Audio API gain node with logarithmic scaling
+    const actualGain = volumeToGain(currentVolume);
     if (gainNode) {
-      gainNode.gain.value = currentVolume;
+      gainNode.gain.value = actualGain;
     }
 
     // Also try regular volume (for non-iOS)
     try {
-      audioPlayer.volume = currentVolume;
+      audioPlayer.volume = actualGain;
     } catch(e) {}
 
     // Haptic feedback
