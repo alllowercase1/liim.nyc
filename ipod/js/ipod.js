@@ -47,7 +47,7 @@
     }
   }
 
-  const albumPath = 'assets/music/liim lasalle loves you/';
+  const albumPath = 'ipod/assets/music/liim lasalle loves you/';
   const albumCover = albumPath + 'Liim Lasalle Loves You 2.png';
 
   const trackList = [
