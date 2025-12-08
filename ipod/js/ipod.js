@@ -131,6 +131,7 @@
     initButtonEvents();
     initContentScrolling();
     initAudioPlayer();
+    initScrollWheelSupport();
     selectFirstItem();
     updateHeader();
 
@@ -838,6 +839,32 @@
         e.stopPropagation();
       }, { passive: true });
     });
+  }
+
+  // ============================================
+  // Scroll Wheel Support (Desktop)
+  // ============================================
+  let scrollAccumulator = 0;
+  const scrollThreshold = 50;
+
+  function initScrollWheelSupport() {
+    document.querySelector('.ipod-screen').addEventListener('wheel', function(e) {
+      e.preventDefault();
+
+      scrollAccumulator += e.deltaY;
+
+      if (Math.abs(scrollAccumulator) >= scrollThreshold) {
+        const direction = scrollAccumulator > 0 ? 1 : -1;
+
+        if (state.currentScreen === 'music-player') {
+          adjustVolume(-direction); // Invert for natural scroll feel
+        } else {
+          scrollMenu(direction);
+        }
+
+        scrollAccumulator = 0;
+      }
+    }, { passive: false });
   }
 
   // ============================================
