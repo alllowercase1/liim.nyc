@@ -717,7 +717,7 @@
     const iframe = document.getElementById('video-embed');
 
     iframe.src = embedUrl;
-    ytPlayerState.playing = true;
+    ytPlayerState.playing = false; // Don't assume autoplay works, first click will play
 
     navigateTo('video-player');
   }
