@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Liim Lasalle - Harlem-raised artist blending hip-hop, soul, and alternative soundscapes. Official website.">
+  <meta name="keywords" content="Liim Lasalle, NYC artist, hip-hop, soul, alternative, Harlem, New York music">
+  <meta name="author" content="Liim Lasalle">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://liim.nyc/">
+  <meta property="og:title" content="Liim Lasalle - Official Website">
+  <meta property="og:description" content="Harlem-raised artist blending hip-hop, soul, and alternative soundscapes.">
+  <meta property="og:image" content="https://liim.nyc/assets/images/og-image.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Liim Lasalle - Official Website">
+  <meta name="twitter:description" content="Harlem-raised artist blending hip-hop, soul, and alternative soundscapes.">
+  <meta name="twitter:image" content="https://liim.nyc/assets/images/og-image.jpg">
+
+  <title>Liim Lasalle - Official Website</title>
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="canonical" href="https://liim.nyc/">
+  <link rel="stylesheet" href="css/win98.css">
+</head>
+<body>
+  <!-- Boot Screen -->
+  <div id="boot-screen" class="boot-screen">
+    <div class="boot-content">
+      <div class="boot-logo">
+        <img src="assets/images/logo.png" alt="Liim Lasalle">
+      </div>
+      <div class="boot-text">Starting LIIM.NYC...</div>
+      <div class="boot-progress">
+        <div class="boot-progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop -->
+  <div id="desktop" class="desktop">
+    <!-- Desktop Icons -->
+    <div class="desktop-icons">
+      <button class="desktop-icon" data-window="about" ondblclick="openWindow('about')">
+        <div class="icon-image icon-exe"></div>
+        <span class="icon-label">Liim.exe</span>
+      </button>
+
+      <button class="desktop-icon" data-window="shows" ondblclick="openWindow('shows')">
+        <div class="icon-image icon-txt"></div>
+        <span class="icon-label">Shows.txt</span>
+      </button>
+
+      <button class="desktop-icon" data-window="merch" ondblclick="openWindow('merch')">
+        <div class="icon-image icon-folder"></div>
+        <span class="icon-label">Merch</span>
+      </button>
+
+      <button class="desktop-icon" data-window="videos" ondblclick="openWindow('videos')">
+        <div class="icon-image icon-media"></div>
+        <span class="icon-label">Videos</span>
+      </button>
+
+      <button class="desktop-icon" data-window="news" ondblclick="openWindow('news')">
+        <div class="icon-image icon-doc"></div>
+        <span class="icon-label">News.doc</span>
+      </button>
+
+      <a href="https://instagram.com/liimlasalle" target="_blank" rel="noopener noreferrer" class="desktop-icon">
+        <div class="icon-image icon-internet"></div>
+        <span class="icon-label">Instagram</span>
+      </a>
+
+      <a href="https://open.spotify.com/artist/liim" target="_blank" rel="noopener noreferrer" class="desktop-icon">
+        <div class="icon-image icon-music"></div>
+        <span class="icon-label">Spotify</span>
+      </a>
+    </div>
+
+    <!-- Windows Container -->
+    <div id="windows-container">
+
+      <!-- About Window -->
+      <div id="window-about" class="win98-window" data-window="about" style="display: none;">
+        <div class="window-titlebar" onmousedown="startDrag(event, 'about')">
+          <div class="window-title">
+            <span class="window-icon icon-exe-small"></span>
+            Liim.exe
+          </div>
+          <div class="window-controls">
+            <button class="window-btn minimize" onclick="minimizeWindow('about')">_</button>
+            <button class="window-btn maximize" onclick="maximizeWindow('about')">[]</button>
+            <button class="window-btn close" onclick="closeWindow('about')">X</button>
+          </div>
+        </div>
+        <div class="window-menubar">
+          <span class="menu-item">File</span>
+          <span class="menu-item">Edit</span>
+          <span class="menu-item">View</span>
+          <span class="menu-item">Help</span>
+        </div>
+        <div class="window-content">
+          <div class="about-layout">
+            <div class="about-image">
+              <img src="assets/images/bio.jpg" alt="Liim Lasalle" class="bio-photo">
+            </div>
+            <div class="about-text">
+              <h2>About Liim Lasalle</h2>
+              <p>Since the release of his 2022 debut single "Pupils" (with Opraah), Liim has quickly become one of New York's most promising new artists. Drawing on bespoke, jazz-infused production, jagged rhythms, ghostly soul fragments, and freeform lyrical flows, the 22-year-old Harlem-raised artist's genre-blending approach has resulted in a sound that bends structure and mood, fusing hip-hop, soul, and alternative soundscapes that reflect his New York City upbringing.</p>
+              <p>Having recently modeled for Gucci and Supreme, Liim has also gained the recognition of Tyler, The Creator for tracks like "Petty Pete", "Edward 40 Handz", and "Older Than Me", rapidly establishing himself within the NYC creative community and beyond.</p>
+            </div>
+          </div>
+          <div class="hero-section">
+            <img src="assets/images/hero.png" alt="Liim Lasalle" class="hero-image">
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>Liim Lasalle - NYC's New Sound</span>
+        </div>
+      </div>
+
+      <!-- Shows Window -->
+      <div id="window-shows" class="win98-window" data-window="shows" style="display: none;">
+        <div class="window-titlebar" onmousedown="startDrag(event, 'shows')">
+          <div class="window-title">
+            <span class="window-icon icon-txt-small"></span>
+            Shows.txt - Notepad
+          </div>
+          <div class="window-controls">
+            <button class="window-btn minimize" onclick="minimizeWindow('shows')">_</button>
+            <button class="window-btn maximize" onclick="maximizeWindow('shows')">[]</button>
+            <button class="window-btn close" onclick="closeWindow('shows')">X</button>
+          </div>
+        </div>
+        <div class="window-menubar">
+          <span class="menu-item">File</span>
+          <span class="menu-item">Edit</span>
+          <span class="menu-item">Search</span>
+          <span class="menu-item">Help</span>
+        </div>
+        <div class="window-content notepad-content">
+          <pre class="notepad-text">
+╔══════════════════════════════════════════════════════════╗
+║            LIIM LASALLE - UPCOMING SHOWS                 ║
+╚══════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  DATE:     December 14, 2024
+  VENUE:    SOB's
+  CITY:     New York, NY
+  EVENT:    Big Ass Kids Presents: The Biggest Little Festival Ever
+  STATUS:   ★ ON SALE NOW ★
+
+  🎫 TICKETS: https://sobs.com/events/big-ass-kids-presents-the-biggest-little-festival-ever/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  More shows coming soon...
+
+  Follow @liimlasalle for announcements!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          </pre>
+          <a href="https://sobs.com/events/big-ass-kids-presents-the-biggest-little-festival-ever/" target="_blank" rel="noopener noreferrer" class="win98-button">Get Tickets</a>
+        </div>
+        <div class="window-statusbar">
+          <span>Ln 1, Col 1</span>
+        </div>
+      </div>
+
+      <!-- Merch Window -->
+      <div id="window-merch" class="win98-window" data-window="merch" style="display: none;">
+        <div class="window-titlebar" onmousedown="startDrag(event, 'merch')">
+          <div class="window-title">
+            <span class="window-icon icon-folder-small"></span>
+            Merch
+          </div>
+          <div class="window-controls">
+            <button class="window-btn minimize" onclick="minimizeWindow('merch')">_</button>
+            <button class="window-btn maximize" onclick="maximizeWindow('merch')">[]</button>
+            <button class="window-btn close" onclick="closeWindow('merch')">X</button>
+          </div>
+        </div>
+        <div class="window-menubar">
+          <span class="menu-item">File</span>
+          <span class="menu-item">Edit</span>
+          <span class="menu-item">View</span>
+          <span class="menu-item">Help</span>
+        </div>
+        <div class="window-toolbar">
+          <button class="toolbar-btn">Back</button>
+          <button class="toolbar-btn">Forward</button>
+          <div class="toolbar-address">
+            <span class="address-label">Address:</span>
+            <span class="address-bar">C:\Liim\Merch\</span>
+          </div>
+        </div>
+        <div class="window-content explorer-content">
+          <div class="file-grid">
+            <div class="file-item">
+              <div class="file-icon merch-placeholder">LL</div>
+              <div class="file-name">Liim Lasalle Loves You Tee</div>
+              <div class="file-price">$35</div>
+              <a href="#" class="win98-button small">Buy</a>
+            </div>
+            <div class="file-item">
+              <div class="file-icon merch-placeholder">LLLY</div>
+              <div class="file-name">LLLY Hoodie</div>
+              <div class="file-price">$65</div>
+              <a href="#" class="win98-button small">Buy</a>
+            </div>
+            <div class="file-item">
+              <div class="file-icon merch-placeholder">LP</div>
+              <div class="file-name">Liim Lasalle Loves You Vinyl</div>
+              <div class="file-price">$30</div>
+              <a href="#" class="win98-button small">Buy</a>
+            </div>
+            <div class="file-item">
+              <div class="file-icon merch-placeholder">^</div>
+              <div class="file-name">LL Dad Hat</div>
+              <div class="file-price">$28</div>
+              <a href="#" class="win98-button small">Buy</a>
+            </div>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>4 object(s)</span>
+        </div>
+      </div>
+
+      <!-- Videos Window -->
+      <div id="window-videos" class="win98-window" data-window="videos" style="display: none;">
+        <div class="window-titlebar" onmousedown="startDrag(event, 'videos')">
+          <div class="window-title">
+            <span class="window-icon icon-media-small"></span>
+            Windows Media Player
+          </div>
+          <div class="window-controls">
+            <button class="window-btn minimize" onclick="minimizeWindow('videos')">_</button>
+            <button class="window-btn maximize" onclick="maximizeWindow('videos')">[]</button>
+            <button class="window-btn close" onclick="closeWindow('videos')">X</button>
+          </div>
+        </div>
+        <div class="window-menubar">
+          <span class="menu-item">File</span>
+          <span class="menu-item">View</span>
+          <span class="menu-item">Play</span>
+          <span class="menu-item">Help</span>
+        </div>
+        <div class="window-content media-content">
+          <div class="video-main">
+            <div class="video-embed">
+              <iframe
+                src="https://www.youtube.com/embed/fO6BsTjE3Ng"
+                title="Liim Lasalle - Featured Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+          <div class="video-playlist">
+            <div class="playlist-header">Playlist</div>
+            <a href="https://www.youtube.com/watch?v=7w3T9-d2zDA" target="_blank" rel="noopener noreferrer" class="playlist-item">
+              <img src="https://img.youtube.com/vi/7w3T9-d2zDA/default.jpg" alt="Video" class="playlist-thumb">
+              <span>Music Video</span>
+            </a>
+            <a href="https://www.youtube.com/watch?v=U-Wy21xnN0U" target="_blank" rel="noopener noreferrer" class="playlist-item">
+              <img src="https://img.youtube.com/vi/U-Wy21xnN0U/default.jpg" alt="Video" class="playlist-thumb">
+              <span>Music Video</span>
+            </a>
+            <a href="https://www.youtube.com/watch?v=l7snD_b4A-I" target="_blank" rel="noopener noreferrer" class="playlist-item">
+              <img src="https://img.youtube.com/vi/l7snD_b4A-I/default.jpg" alt="Video" class="playlist-thumb">
+              <span>Music Video</span>
+            </a>
+            <a href="https://www.youtube.com/watch?v=c_DA2kXBSWI" target="_blank" rel="noopener noreferrer" class="playlist-item">
+              <img src="https://img.youtube.com/vi/c_DA2kXBSWI/default.jpg" alt="Video" class="playlist-thumb">
+              <span>Music Video</span>
+            </a>
+            <a href="https://www.youtube.com/watch?v=6Pavlk9FCts" target="_blank" rel="noopener noreferrer" class="playlist-item">
+              <img src="https://img.youtube.com/vi/6Pavlk9FCts/default.jpg" alt="Video" class="playlist-thumb">
+              <span>Music Video</span>
+            </a>
+            <a href="https://www.youtube.com/@LiimLasalle" target="_blank" rel="noopener noreferrer" class="win98-button" style="margin-top: 10px;">View All on YouTube</a>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>Now Playing: Latest Release</span>
+        </div>
+      </div>
+
+      <!-- News Window -->
+      <div id="window-news" class="win98-window" data-window="news" style="display: none;">
+        <div class="window-titlebar" onmousedown="startDrag(event, 'news')">
+          <div class="window-title">
+            <span class="window-icon icon-doc-small"></span>
+            News.doc - WordPad
+          </div>
+          <div class="window-controls">
+            <button class="window-btn minimize" onclick="minimizeWindow('news')">_</button>
+            <button class="window-btn maximize" onclick="maximizeWindow('news')">[]</button>
+            <button class="window-btn close" onclick="closeWindow('news')">X</button>
+          </div>
+        </div>
+        <div class="window-menubar">
+          <span class="menu-item">File</span>
+          <span class="menu-item">Edit</span>
+          <span class="menu-item">View</span>
+          <span class="menu-item">Insert</span>
+          <span class="menu-item">Format</span>
+          <span class="menu-item">Help</span>
+        </div>
+        <div class="window-toolbar">
+          <button class="toolbar-btn">B</button>
+          <button class="toolbar-btn">I</button>
+          <button class="toolbar-btn">U</button>
+        </div>
+        <div class="window-content wordpad-content">
+          <h1 class="doc-title">LIIM LASALLE IN THE PRESS</h1>
+
+          <div class="news-article">
+            <div class="news-source">Billboard</div>
+            <h2 class="news-headline">Liim: Billboard's Hip-Hop Rookie of the Month</h2>
+            <div class="news-date">November 2025</div>
+            <a href="https://www.billboard.com/music/rb-hip-hop/liim-billboard-hip-hop-rookie-of-the-month-november-2025-1236098831/" target="_blank" rel="noopener noreferrer" class="news-link">Read Article &rarr;</a>
+          </div>
+
+          <hr class="doc-divider">
+
+          <div class="news-article">
+            <div class="news-source">BET</div>
+            <h2 class="news-headline">Liim Lasalle Opens Up on Love, Loss and His Debut Album</h2>
+            <div class="news-date">2024</div>
+            <a href="https://www.bet.com/article/hjqjah/liim-lasalle-opens-up-on-love-loss-and-his-debut-album-liim-lasalle-loves-you" target="_blank" rel="noopener noreferrer" class="news-link">Read Article &rarr;</a>
+          </div>
+
+          <hr class="doc-divider">
+
+          <div class="news-article">
+            <div class="news-source">Rolling Stone</div>
+            <h2 class="news-headline">Liim Is Ready to Take Over New York</h2>
+            <div class="news-date">2024</div>
+            <a href="https://www.rollingstone.com/music/music-features/liim-new-york-rapper-debut-album-interview-1235425442/" target="_blank" rel="noopener noreferrer" class="news-link">Read Article &rarr;</a>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>Press Clippings</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Taskbar -->
+  <div id="taskbar" class="taskbar">
+    <button id="start-button" class="start-button" onclick="toggleStartMenu()">
+      <span class="start-logo"></span>
+      <span>Start</span>
+    </button>
+
+    <div id="taskbar-windows" class="taskbar-windows">
+      <!-- Dynamically populated -->
+    </div>
+
+    <div class="system-tray">
+      <div class="tray-icons">
+        <a href="https://instagram.com/liimlasalle" target="_blank" rel="noopener noreferrer" class="tray-icon" title="Instagram">IG</a>
+        <a href="https://twitter.com/liimlasalle" target="_blank" rel="noopener noreferrer" class="tray-icon" title="Twitter/X">X</a>
+        <a href="https://open.spotify.com/artist/liim" target="_blank" rel="noopener noreferrer" class="tray-icon" title="Spotify">SP</a>
+      </div>
+      <div id="clock" class="clock"></div>
+    </div>
+  </div>
+
+  <!-- Start Menu -->
+  <div id="start-menu" class="start-menu" style="display: none;">
+    <div class="start-menu-sidebar">
+      <span class="sidebar-text">LIIM.NYC</span>
+    </div>
+    <div class="start-menu-content">
+      <button class="start-menu-item" onclick="openWindow('about'); toggleStartMenu();">
+        <span class="menu-icon icon-exe-small"></span>
+        <span>Liim.exe</span>
+      </button>
+      <button class="start-menu-item" onclick="openWindow('shows'); toggleStartMenu();">
+        <span class="menu-icon icon-txt-small"></span>
+        <span>Shows</span>
+      </button>
+      <button class="start-menu-item" onclick="openWindow('merch'); toggleStartMenu();">
+        <span class="menu-icon icon-folder-small"></span>
+        <span>Merch</span>
+      </button>
+      <button class="start-menu-item" onclick="openWindow('videos'); toggleStartMenu();">
+        <span class="menu-icon icon-media-small"></span>
+        <span>Videos</span>
+      </button>
+      <button class="start-menu-item" onclick="openWindow('news'); toggleStartMenu();">
+        <span class="menu-icon icon-doc-small"></span>
+        <span>News</span>
+      </button>
+      <hr class="start-divider">
+      <a href="https://www.youtube.com/@LiimLasalle" target="_blank" rel="noopener noreferrer" class="start-menu-item">
+        <span class="menu-icon icon-internet-small"></span>
+        <span>YouTube</span>
+      </a>
+      <a href="mailto:contact@liim.nyc" class="start-menu-item">
+        <span class="menu-icon icon-mail-small"></span>
+        <span>Contact</span>
+      </a>
+    </div>
+  </div>
+
+  <script src="js/win98.js"></script>
+</body>
+</html>

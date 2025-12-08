@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Liim Lasalle - Harlem-raised artist blending hip-hop, soul, and alternative soundscapes.">
+  <title>Liim Lasalle - iPod</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="stylesheet" href="css/ipod.css?v=15">
+</head>
+<body>
+  <div class="page-background"></div>
+
+  <div class="ipod-device">
+    <!-- Screen -->
+    <div class="ipod-screen">
+      <!-- Header Bar -->
+      <div class="screen-header">
+        <span class="header-title">iPod</span>
+        <span class="header-status">
+          <span class="play-indicator" id="header-play-indicator"></span>
+          <span class="header-battery">
+            <svg width="20" height="10" viewBox="0 0 20 10">
+              <rect x="0" y="0" width="18" height="10" rx="1" fill="none" stroke="#333" stroke-width="1"/>
+              <rect x="18" y="3" width="2" height="4" fill="#333"/>
+              <rect class="battery-fill" x="2" y="2" width="14" height="6" fill="#4cd964"/>
+            </svg>
+          </span>
+        </span>
+      </div>
+
+      <!-- Screen Content Container -->
+      <div class="screen-content">
+        <!-- Main Menu -->
+        <div class="menu-screen active" data-screen="main">
+          <div class="menu-list">
+            <div class="menu-item" data-target="music">Music</div>
+            <div class="menu-item" data-target="videos">Videos</div>
+            <div class="menu-item" data-target="shows">Shows</div>
+            <div class="menu-item" data-target="merch">Merch</div>
+            <div class="menu-item" data-target="news">News</div>
+            <div class="menu-item" data-target="about">About</div>
+            <div class="menu-item" data-target="contact">Contact</div>
+          </div>
+        </div>
+
+        <!-- Music Menu -->
+        <div class="menu-screen" data-screen="music">
+          <div class="menu-list">
+            <div class="menu-item" data-target="music-album">Liim Lasalle Loves You</div>
+            <div class="menu-item" data-target="music-player">Now Playing</div>
+          </div>
+        </div>
+
+        <!-- Album Track List -->
+        <div class="menu-screen" data-screen="music-album">
+          <div class="menu-list">
+            <div class="menu-item track-item" data-track="0">Radio Advice</div>
+            <div class="menu-item track-item" data-track="1">For The Both Of Us</div>
+            <div class="menu-item track-item" data-track="2">Clutching My Breaks</div>
+            <div class="menu-item track-item" data-track="3">Mezcal</div>
+            <div class="menu-item track-item" data-track="4">Why Why</div>
+            <div class="menu-item track-item" data-track="5">Hope</div>
+            <div class="menu-item track-item" data-track="6">Two Summers</div>
+            <div class="menu-item track-item" data-track="7">Shams Love Song</div>
+            <div class="menu-item track-item" data-track="8">Sahara Freestyle</div>
+            <div class="menu-item track-item" data-track="9">Rollin Around</div>
+            <div class="menu-item track-item" data-track="10">Break</div>
+            <div class="menu-item track-item" data-track="11">Le Pouvoir Noir (ft. N8SHO)</div>
+            <div class="menu-item track-item" data-track="12">Playin Yoself</div>
+            <div class="menu-item track-item" data-track="13">Doin Thangs</div>
+            <div class="menu-item track-item" data-track="14">Important To Ya</div>
+            <div class="menu-item track-item" data-track="15">Kicked Rocks</div>
+            <div class="menu-item track-item" data-track="16">Liim Lasalle Loves You</div>
+          </div>
+        </div>
+
+        <!-- Music Player Screen -->
+        <div class="menu-screen" data-screen="music-player">
+          <div class="music-player-container">
+            <div class="now-playing-top">
+              <div class="now-playing-art">
+                <img id="now-playing-cover" src="assets/music/liim lasalle loves you/Liim Lasalle Loves You 2.png" alt="Album Art">
+              </div>
+              <div class="now-playing-info">
+                <div class="now-playing-title" id="now-playing-title">No Track Selected</div>
+                <div class="now-playing-artist">Liim</div>
+                <div class="now-playing-album">Liim Lasalle Loves You</div>
+                <div class="now-playing-stars">★★★★★</div>
+                <div class="now-playing-tracknum" id="track-number">0 of 17</div>
+              </div>
+            </div>
+            <div class="now-playing-bottom">
+              <div class="now-playing-times">
+                <span id="current-time">0:00</span>
+                <span id="remaining-time">-0:00</span>
+              </div>
+              <div class="now-playing-bar">
+                <div class="progress-track">
+                  <div class="progress-fill" id="progress-fill"></div>
+                  <div class="progress-diamond" id="progress-diamond"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Screen -->
+        <div class="menu-screen" data-screen="about">
+          <div class="content-view about-view">
+            <div class="about-hero">
+              <img src="assets/images/hero.png" alt="Liim Lasalle">
+            </div>
+            <div class="about-text">
+              <h2>Liim Lasalle</h2>
+              <p>Since the release of his 2022 debut single "Pupils" (with Opraah), Liim has quickly become one of New York's most promising new artists.</p>
+              <p>Drawing on bespoke, jazz-infused production, jagged rhythms, ghostly soul fragments, and freeform lyrical flows, the 22-year-old Harlem-raised artist's genre-blending approach has resulted in a sound that bends structure and mood, fusing hip-hop, soul, and alternative soundscapes that reflect his New York City upbringing.</p>
+              <p>Having recently modeled for Gucci and Supreme, Liim has also gained the recognition of Tyler, The Creator for tracks like "Petty Pete", "Edward 40 Handz", and "Older Than Me", rapidly establishing himself within the NYC creative community and beyond.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shows Screen -->
+        <div class="menu-screen" data-screen="shows">
+          <div class="menu-list">
+            <div class="menu-item show-item" data-href="https://sobs.com/events/big-ass-kids-presents-the-biggest-little-festival-ever/">
+              <span class="show-date">Dec 14</span>
+              <span class="show-info">SOB's - New York, NY</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Merch Screen -->
+        <div class="menu-screen has-artwork" data-screen="merch">
+          <div class="menu-list">
+            <div class="menu-item merch-item" data-target="merch-1" data-thumb="assets/images/LLLY Shirt (White).jpeg.webp">
+              <span class="merch-name">Liim Lasalle Loves You Tee</span>
+              <span class="merch-price">$35</span>
+            </div>
+            <div class="menu-item merch-item" data-target="merch-2" data-thumb="assets/images/LLLY Shirt (White).jpeg.webp">
+              <span class="merch-name">LLLY Hoodie</span>
+              <span class="merch-price">$65</span>
+            </div>
+            <div class="menu-item merch-item" data-target="merch-3" data-thumb="assets/images/limlasalleloveme.png">
+              <span class="merch-name">Liim Lasalle Loves You Vinyl</span>
+              <span class="merch-price">$30</span>
+            </div>
+            <div class="menu-item merch-item" data-target="merch-4" data-thumb="assets/images/limlasalleloveme.png">
+              <span class="merch-name">LL Dad Hat</span>
+              <span class="merch-price">$28</span>
+            </div>
+          </div>
+          <div class="artwork-panel">
+            <img id="merch-artwork" src="assets/images/LLLY Shirt (White).jpeg.webp" alt="Merch image">
+          </div>
+        </div>
+
+        <!-- Merch Details -->
+        <div class="menu-screen" data-screen="merch-1">
+          <div class="content-view merch-detail">
+            <img class="merch-image" src="assets/images/LLLY Shirt (White).jpeg.webp" alt="Liim Lasalle Loves You Tee">
+            <h2>Liim Lasalle Loves You Tee</h2>
+            <p class="price-big">$35</p>
+            <a href="#" class="ipod-link">BUY NOW →</a>
+          </div>
+        </div>
+        <div class="menu-screen" data-screen="merch-2">
+          <div class="content-view merch-detail">
+            <img class="merch-image" src="assets/images/LLLY Shirt (White).jpeg.webp" alt="LLLY Hoodie">
+            <h2>LLLY Hoodie</h2>
+            <p class="price-big">$65</p>
+            <a href="#" class="ipod-link">BUY NOW →</a>
+          </div>
+        </div>
+        <div class="menu-screen" data-screen="merch-3">
+          <div class="content-view merch-detail">
+            <img class="merch-image" src="assets/images/limlasalleloveme.png" alt="Liim Lasalle Loves You Vinyl">
+            <h2>Liim Lasalle Loves You Vinyl</h2>
+            <p class="price-big">$30</p>
+            <a href="#" class="ipod-link">BUY NOW →</a>
+          </div>
+        </div>
+        <div class="menu-screen" data-screen="merch-4">
+          <div class="content-view merch-detail">
+            <img class="merch-image" src="assets/images/limlasalleloveme.png" alt="LL Dad Hat">
+            <h2>LL Dad Hat</h2>
+            <p class="price-big">$28</p>
+            <a href="#" class="ipod-link">BUY NOW →</a>
+          </div>
+        </div>
+
+        <!-- Videos Screen -->
+        <div class="menu-screen has-artwork" data-screen="videos">
+          <div class="menu-list">
+            <div class="menu-item video-item" data-href="https://www.youtube.com/watch?v=fO6BsTjE3Ng" data-thumb="https://img.youtube.com/vi/fO6BsTjE3Ng/hqdefault.jpg">
+              <span>For The Both Of Us</span>
+            </div>
+            <div class="menu-item video-item" data-href="https://www.youtube.com/watch?v=7w3T9-d2zDA" data-thumb="https://img.youtube.com/vi/7w3T9-d2zDA/hqdefault.jpg">
+              <span>Kicked Rocks</span>
+            </div>
+            <div class="menu-item video-item" data-href="https://www.youtube.com/watch?v=U-Wy21xnN0U" data-thumb="https://img.youtube.com/vi/U-Wy21xnN0U/hqdefault.jpg">
+              <span>Mezcal</span>
+            </div>
+            <div class="menu-item video-item" data-href="https://www.youtube.com/watch?v=l7snD_b4A-I" data-thumb="https://img.youtube.com/vi/l7snD_b4A-I/hqdefault.jpg">
+              <span>Why Why</span>
+            </div>
+            <div class="menu-item video-item" data-href="https://www.youtube.com/watch?v=c_DA2kXBSWI" data-thumb="https://img.youtube.com/vi/c_DA2kXBSWI/hqdefault.jpg">
+              <span>HOPE (Visualizer)</span>
+            </div>
+            <div class="menu-item video-item" data-href="https://www.youtube.com/watch?v=6Pavlk9FCts" data-thumb="https://img.youtube.com/vi/6Pavlk9FCts/hqdefault.jpg">
+              <span>Victory Light Interview</span>
+            </div>
+          </div>
+          <div class="artwork-panel">
+            <img id="video-artwork" src="https://img.youtube.com/vi/fO6BsTjE3Ng/hqdefault.jpg" alt="Video thumbnail">
+          </div>
+        </div>
+
+        <!-- Video Player Screen -->
+        <div class="menu-screen" data-screen="video-player">
+          <div class="video-player-container">
+            <div class="video-title" id="video-player-title">Now Playing</div>
+            <div class="video-embed-wrapper">
+              <iframe id="video-embed" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- News Screen -->
+        <div class="menu-screen" data-screen="news">
+          <div class="menu-list">
+            <div class="menu-item news-item" data-href="https://www.billboard.com/music/rb-hip-hop/liim-billboard-hip-hop-rookie-of-the-month-november-2025-1236098831/">
+              <span class="news-source">Billboard</span>
+              <span class="news-headline">Hip-Hop Rookie of the Month</span>
+              <span class="news-preview">The Harlem artist on his genre-bending sound and NYC roots...</span>
+            </div>
+            <div class="menu-item news-item" data-href="https://www.bet.com/article/hjqjah/liim-lasalle-opens-up-on-love-loss-and-his-debut-album-liim-lasalle-loves-you">
+              <span class="news-source">BET</span>
+              <span class="news-headline">Opens Up on Love, Loss and His Debut Album</span>
+              <span class="news-preview">Liim discusses the personal stories behind 'Liim Lasalle Loves You'...</span>
+            </div>
+            <div class="menu-item news-item" data-href="https://www.rollingstone.com/music/music-features/liim-new-york-rapper-debut-album-interview-1235425442/">
+              <span class="news-source">Rolling Stone</span>
+              <span class="news-headline">Ready to Take Over New York</span>
+              <span class="news-preview">Meet the 22-year-old reshaping hip-hop with jazz and soul...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Article Viewer Screen -->
+        <div class="menu-screen" data-screen="article-viewer">
+          <div class="article-viewer-container">
+            <div class="article-title" id="article-viewer-title">Loading...</div>
+            <div class="article-embed-wrapper">
+              <iframe id="article-embed" src="" frameborder="0"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Screen -->
+        <div class="menu-screen" data-screen="contact">
+          <div class="menu-list">
+            <div class="menu-item" data-target="contact-socials">Socials</div>
+            <div class="menu-item" data-target="contact-streaming">Streaming</div>
+          </div>
+        </div>
+
+        <!-- Socials Screen -->
+        <div class="menu-screen" data-screen="contact-socials">
+          <div class="menu-list">
+            <div class="menu-item contact-item" data-href="https://www.instagram.com/liimnotliim/">
+              <span>Instagram</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="menu-item contact-item" data-href="https://www.tiktok.com/@liimlasallelovesyou">
+              <span>TikTok</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="menu-item contact-item" data-href="https://www.youtube.com/@LiimLasalle">
+              <span>YouTube</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="menu-item contact-item" data-href="https://x.com/LiimLasalle">
+              <span>X</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="menu-item contact-item" data-href="mailto:mgmt@liim.nyc">
+              <span>Email</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streaming Screen -->
+        <div class="menu-screen" data-screen="contact-streaming">
+          <div class="menu-list">
+            <div class="menu-item contact-item" data-href="https://open.spotify.com/artist/4WBs3HlXxMAqo8Yi6m1PCM?si=3r6U522pSEqgWTboiiJYAw">
+              <span>Spotify</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="menu-item contact-item" data-href="https://music.apple.com/us/artist/liim/1606532881">
+              <span>Apple Music</span>
+              <span class="arrow">→</span>
+            </div>
+            <div class="menu-item contact-item" data-href="https://soundcloud.com/liim">
+              <span>SoundCloud</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Click Wheel -->
+    <div class="click-wheel" id="clickWheel">
+      <div class="wheel-button menu-btn" data-action="menu">MENU</div>
+      <div class="wheel-button prev-btn" data-action="prev">
+        <svg width="18" height="12" viewBox="0 0 18 12"><polygon points="9,0 9,12 0,6" fill="currentColor"/><polygon points="18,0 18,12 9,6" fill="currentColor"/></svg>
+      </div>
+      <div class="wheel-button next-btn" data-action="next">
+        <svg width="18" height="12" viewBox="0 0 18 12"><polygon points="0,0 9,6 0,12" fill="currentColor"/><polygon points="9,0 18,6 9,12" fill="currentColor"/></svg>
+      </div>
+      <div class="wheel-button play-btn" data-action="play">
+        <svg width="20" height="12" viewBox="0 0 20 12"><polygon points="0,0 7,6 0,12" fill="currentColor"/><rect x="10" y="0" width="3" height="12" fill="currentColor"/><rect x="16" y="0" width="3" height="12" fill="currentColor"/></svg>
+      </div>
+      <button class="center-button" id="centerButton" data-action="select"></button>
+    </div>
+  </div>
+
+  <script src="js/ipod.js?v=15"></script>
+</body>
+</html>

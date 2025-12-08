@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <!-- Classic Windows-style arrow cursor -->
+  <polygon points="4,2 4,20 8,16 12,22 14,21 10,15 16,15 4,2" fill="#000000"/>
+  <polygon points="5,4 5,17 8,14 11.5,19.5 12.5,19 9,13 14,13 5,4" fill="#ffffff"/>
+</svg>
