@@ -528,7 +528,11 @@
         break;
       case 'play':
         haptic('medium');
-        togglePlayPause();
+        if (state.currentScreen === 'video-player') {
+          toggleVideoPlayPause();
+        } else {
+          togglePlayPause();
+        }
         break;
       case 'prev':
         haptic('medium');
@@ -733,6 +737,20 @@
       iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
       ytPlayerState.playing = true;
     }
+    updateVideoPlayIndicator();
+  }
+
+  function updateVideoPlayIndicator() {
+    const headerIndicator = document.getElementById('header-play-indicator');
+    if (!headerIndicator) return;
+
+    if (state.currentScreen === 'video-player') {
+      if (ytPlayerState.playing) {
+        headerIndicator.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><polygon points="0,0 8,4 0,8" fill="#333"/></svg>';
+      } else {
+        headerIndicator.innerHTML = '<svg width="8" height="8" viewBox="0 0 8 8"><rect x="0" y="0" width="3" height="8" fill="#333"/><rect x="5" y="0" width="3" height="8" fill="#333"/></svg>';
+      }
+    }
   }
 
   function extractYouTubeId(url) {
@@ -746,6 +764,9 @@
     if (iframe) {
       iframe.src = '';
     }
+    ytPlayerState.playing = false;
+    // Clear video indicator, restore music indicator if playing
+    updatePlayingIndicator();
   }
 
   function navigateTo(screenId) {
