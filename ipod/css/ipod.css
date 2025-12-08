@@ -259,11 +259,11 @@ body {
 
 .show-date {
   font-weight: bold;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .show-info {
-  font-size: 10px;
+  font-size: 11px;
   opacity: 0.8;
 }
 
@@ -278,12 +278,12 @@ body {
 
 .merch-name {
   flex: 1;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .merch-price {
   font-weight: bold;
-  font-size: 10px;
+  font-size: 12px;
   margin-right: 8px;
 }
 
@@ -354,7 +354,7 @@ body {
 }
 
 .news-headline {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
