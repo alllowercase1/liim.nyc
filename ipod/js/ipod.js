@@ -869,7 +869,7 @@
         const direction = scrollAccumulator > 0 ? 1 : -1;
 
         if (state.currentScreen === 'music-player') {
-          adjustVolume(-direction); // Invert for natural scroll feel
+          adjustVolume(direction); // Scroll up = volume up
         } else {
           scrollMenu(direction);
         }
