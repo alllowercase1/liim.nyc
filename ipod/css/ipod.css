@@ -238,13 +238,6 @@ body {
   color: var(--ipod-text-light);
 }
 
-/* Items without arrows (external links) */
-.menu-item.video-item::after,
-.menu-item.news-item::after,
-.menu-item.contact-item::after {
-  content: '>';
-}
-
 /* Show Item */
 .show-item {
   flex-direction: column;
