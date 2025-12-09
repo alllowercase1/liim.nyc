@@ -717,6 +717,13 @@
       return;
     }
 
+    // Stop any playing music
+    if (playerState.isPlaying) {
+      audioPlayer.pause();
+      playerState.isPlaying = false;
+      updatePlayingIndicator();
+    }
+
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0&enablejsapi=1`;
     const iframe = document.getElementById('video-embed');
 
