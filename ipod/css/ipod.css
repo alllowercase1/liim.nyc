@@ -446,6 +446,13 @@ body {
   color: var(--ipod-text);
 }
 
+.site-credit {
+  font-size: 8px;
+  opacity: 0.5;
+  margin-top: 16px;
+  text-align: center;
+}
+
 /* Music Player - iPod Classic Style */
 .music-player-container {
   width: 100%;
