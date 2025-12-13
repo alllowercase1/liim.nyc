@@ -808,6 +808,11 @@
       setTimeout(selectFirstItem, 50);
     }
 
+    // Preload playlist videos when entering Videos menu
+    if (screenId === 'videos') {
+      preloadAllPlaylistVideos();
+    }
+
     setTimeout(() => {
       currentScreen.classList.remove('exit-left');
     }, 300);
@@ -1220,6 +1225,25 @@
         container.innerHTML = '<div class="menu-item video-item"><span>Unable to load videos</span></div>';
       }
     }
+  }
+
+  let playlistsPreloaded = false;
+
+  async function preloadAllPlaylistVideos() {
+    if (playlistsPreloaded || ytPlaylists.length === 0) return;
+    playlistsPreloaded = true;
+
+    // Load all playlist videos in parallel
+    const loadPromises = ytPlaylists.map(playlist => {
+      const screenId = `playlist-${playlist.id}`;
+      // Only load if not already loaded
+      if (!document.querySelector(`[data-screen="${screenId}"] .video-item:not(.loading-item)`)) {
+        return loadPlaylistVideos(playlist.id, screenId);
+      }
+      return Promise.resolve();
+    });
+
+    await Promise.all(loadPromises);
   }
 
   function renderVideoList(containerId, artworkId, videos) {
