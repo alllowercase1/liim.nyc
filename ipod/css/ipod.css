@@ -280,6 +280,11 @@ body {
   margin-right: 8px;
 }
 
+.merch-item.sold-out {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* Video Item */
 .video-item {
   justify-content: flex-start;
