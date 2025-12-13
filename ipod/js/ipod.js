@@ -1001,11 +1001,8 @@
     }
   }
 
-  // Playlists to hide from the menu
-  const HIDDEN_PLAYLISTS = [
-    'Liim – Official Releases',
-    'Liim – Official Music Videos'
-  ];
+  // The only "Official Music Videos" playlist to keep
+  const KEEP_OFFICIAL_MUSIC_VIDEOS_ID = 'PLZrLzFzgrlqkcTTQdmlSd35UrlIilkIXJ';
 
   async function fetchChannelPlaylists() {
     const url = `https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId=${YT_CHANNEL_ID}&maxResults=50&key=${YT_API_KEY}`;
@@ -1014,7 +1011,16 @@
     const data = await response.json();
 
     return data.items
-      .filter(item => !HIDDEN_PLAYLISTS.includes(item.snippet.title))
+      .filter(item => {
+        const title = item.snippet.title.toLowerCase();
+        // Hide "Official Releases"
+        if (title.includes('official releases')) return false;
+        // For "Official Music Videos", only keep the specific one
+        if (title.includes('official music videos')) {
+          return item.id === KEEP_OFFICIAL_MUSIC_VIDEOS_ID;
+        }
+        return true;
+      })
       .map(item => ({
         id: item.id,
         title: item.snippet.title,
