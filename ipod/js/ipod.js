@@ -1003,8 +1003,8 @@
 
   // Playlists to hide from the menu
   const HIDDEN_PLAYLISTS = [
-    'Official Releases',
-    'Official Music Videos'
+    'Liim – Official Releases',
+    'Liim – Official Music Videos'
   ];
 
   async function fetchChannelPlaylists() {
