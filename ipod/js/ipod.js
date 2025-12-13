@@ -108,6 +108,7 @@
     'merch-3': 'Merch',
     'merch-4': 'Merch',
     'videos': 'Videos',
+    'videos-all': 'All Videos',
     'video-player': 'Now Playing',
     'news': 'News',
     'contact': 'Contact',
@@ -954,100 +955,222 @@
   });
 
   // ============================================
-  // YouTube Feed Integration
+  // YouTube Data API Integration
   // ============================================
-  const YOUTUBE_CHANNEL_ID = 'UC0DfoEyZOWDkyeOYa5Ejhtg';
-  const YOUTUBE_FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
-  const RSS2JSON_API = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(YOUTUBE_FEED_URL)}`;
-  const CACHE_KEY = 'liim_youtube_videos';
-  const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
+  const YT_API_KEY = 'AIzaSyA3vS4udWjJCMFLJWxaR9nNM_eeLNaimo4';
+  const YT_CHANNEL_ID = 'UC0DfoEyZOWDkyeOYa5Ejhtg';
+  const YT_UPLOADS_PLAYLIST = 'UU0DfoEyZOWDkyeOYa5Ejhtg'; // UC -> UU for uploads
+  const YT_CACHE_KEY = 'liim_yt_data';
+  const YT_CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
-  function loadYouTubeVideos() {
-    // Check cache first
-    const cached = getCachedVideos();
-    if (cached) {
-      renderVideos(cached);
-      return;
-    }
+  let ytPlaylists = [];
+  let ytAllVideos = [];
 
-    // Fetch from RSS feed
-    fetch(RSS2JSON_API)
-      .then(response => {
-        if (!response.ok) throw new Error('Feed fetch failed');
-        return response.json();
-      })
-      .then(data => {
-        if (data.status !== 'ok' || !data.items) {
-          throw new Error('Invalid feed response');
-        }
-
-        const videos = data.items.map(item => ({
-          id: extractVideoId(item.link),
-          title: item.title,
-          link: item.link,
-          published: new Date(item.pubDate).getTime()
-        })).filter(v => v.id); // Filter out any without valid IDs
-
-        // Sort by most recent first
-        videos.sort((a, b) => b.published - a.published);
-
-        // Cache the results
-        cacheVideos(videos);
-        renderVideos(videos);
-      })
-      .catch(error => {
-        console.error('YouTube feed error:', error);
-        renderVideoError();
-      });
-  }
-
-  function extractVideoId(url) {
-    const match = url.match(/[?&]v=([^&]+)/);
-    return match ? match[1] : null;
-  }
-
-  function getCachedVideos() {
+  async function initYouTubeData() {
     try {
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (!cached) return null;
+      // Check cache first
+      const cached = getYTCache();
+      if (cached) {
+        ytPlaylists = cached.playlists;
+        ytAllVideos = cached.allVideos;
+        renderPlaylists();
+        return;
+      }
 
-      const { videos, timestamp } = JSON.parse(cached);
-      if (Date.now() - timestamp > CACHE_DURATION) {
-        localStorage.removeItem(CACHE_KEY);
+      // Fetch playlists and all videos in parallel
+      const [playlists, allVideos] = await Promise.all([
+        fetchChannelPlaylists(),
+        fetchAllPlaylistVideos(YT_UPLOADS_PLAYLIST)
+      ]);
+
+      ytPlaylists = playlists;
+      ytAllVideos = allVideos;
+
+      // Cache the data
+      setYTCache({ playlists, allVideos });
+
+      renderPlaylists();
+    } catch (error) {
+      console.error('YouTube API error:', error);
+      renderPlaylistError();
+    }
+  }
+
+  async function fetchChannelPlaylists() {
+    const url = `https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId=${YT_CHANNEL_ID}&maxResults=50&key=${YT_API_KEY}`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Failed to fetch playlists');
+    const data = await response.json();
+
+    return data.items.map(item => ({
+      id: item.id,
+      title: item.snippet.title,
+      thumbnail: item.snippet.thumbnails?.medium?.url || ''
+    }));
+  }
+
+  async function fetchAllPlaylistVideos(playlistId) {
+    let videos = [];
+    let nextPageToken = '';
+
+    do {
+      const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${YT_API_KEY}${nextPageToken ? '&pageToken=' + nextPageToken : ''}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch videos');
+      const data = await response.json();
+
+      const pageVideos = data.items
+        .filter(item => item.snippet.resourceId.kind === 'youtube#video')
+        .map(item => ({
+          id: item.snippet.resourceId.videoId,
+          title: item.snippet.title,
+          thumbnail: item.snippet.thumbnails?.medium?.url || `https://img.youtube.com/vi/${item.snippet.resourceId.videoId}/mqdefault.jpg`,
+          published: new Date(item.snippet.publishedAt).getTime()
+        }));
+
+      videos = videos.concat(pageVideos);
+      nextPageToken = data.nextPageToken || '';
+    } while (nextPageToken);
+
+    // Sort by most recent first
+    videos.sort((a, b) => b.published - a.published);
+    return videos;
+  }
+
+  function getYTCache() {
+    try {
+      const cached = localStorage.getItem(YT_CACHE_KEY);
+      if (!cached) return null;
+      const data = JSON.parse(cached);
+      if (Date.now() - data.timestamp > YT_CACHE_DURATION) {
+        localStorage.removeItem(YT_CACHE_KEY);
         return null;
       }
-      return videos;
+      return data;
     } catch (e) {
       return null;
     }
   }
 
-  function cacheVideos(videos) {
+  function setYTCache(data) {
     try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify({
-        videos,
+      localStorage.setItem(YT_CACHE_KEY, JSON.stringify({
+        ...data,
         timestamp: Date.now()
       }));
-    } catch (e) {
-      // localStorage might be full or disabled
+    } catch (e) {}
+  }
+
+  function renderPlaylists() {
+    const container = document.getElementById('playlists-list');
+    if (!container) return;
+
+    // Keep "All Videos" item, remove loading
+    container.innerHTML = '';
+
+    // Add "All Videos" first
+    const allVideosItem = document.createElement('div');
+    allVideosItem.className = 'menu-item selected';
+    allVideosItem.dataset.target = 'videos-all';
+    allVideosItem.innerHTML = '<span>All Videos</span>';
+    allVideosItem.addEventListener('click', handlePlaylistMenuClick);
+    container.appendChild(allVideosItem);
+
+    // Add each playlist
+    ytPlaylists.forEach(playlist => {
+      const screenId = `playlist-${playlist.id}`;
+
+      // Create menu item
+      const item = document.createElement('div');
+      item.className = 'menu-item';
+      item.dataset.target = screenId;
+      item.dataset.playlistId = playlist.id;
+      item.innerHTML = `<span>${playlist.title}</span>`;
+      item.addEventListener('click', handlePlaylistMenuClick);
+      container.appendChild(item);
+
+      // Create the playlist screen if it doesn't exist
+      createPlaylistScreen(playlist);
+    });
+
+    // Render all videos
+    renderVideoList('all-videos-list', 'all-videos-artwork', ytAllVideos);
+  }
+
+  function handlePlaylistMenuClick(e) {
+    e.stopPropagation();
+    const menuList = this.closest('.menu-list');
+    const items = menuList.querySelectorAll('.menu-item');
+    items.forEach(i => i.classList.remove('selected'));
+    this.classList.add('selected');
+    state.selectedIndex = Array.from(items).indexOf(this);
+
+    const target = this.dataset.target;
+    const playlistId = this.dataset.playlistId;
+
+    // If it's a playlist, load videos if not already loaded
+    if (playlistId && !document.querySelector(`[data-screen="${target}"] .video-item:not(.loading-item)`)) {
+      loadPlaylistVideos(playlistId, target);
+    }
+
+    setTimeout(() => navigateTo(target), 100);
+  }
+
+  function createPlaylistScreen(playlist) {
+    const screenId = `playlist-${playlist.id}`;
+
+    // Check if screen already exists
+    if (document.querySelector(`[data-screen="${screenId}"]`)) return;
+
+    // Create the screen element
+    const screen = document.createElement('div');
+    screen.className = 'menu-screen has-artwork';
+    screen.dataset.screen = screenId;
+    screen.innerHTML = `
+      <div class="menu-list" id="${screenId}-list">
+        <div class="menu-item video-item loading-item">
+          <span>Loading videos...</span>
+        </div>
+      </div>
+      <div class="artwork-panel">
+        <img id="${screenId}-artwork" src="${playlist.thumbnail}" alt="Video thumbnail">
+      </div>
+    `;
+
+    // Add to screen content
+    document.querySelector('.screen-content').appendChild(screen);
+
+    // Add to screenTitles
+    screenTitles[screenId] = playlist.title;
+  }
+
+  async function loadPlaylistVideos(playlistId, screenId) {
+    try {
+      const videos = await fetchAllPlaylistVideos(playlistId);
+      renderVideoList(`${screenId}-list`, `${screenId}-artwork`, videos);
+    } catch (error) {
+      console.error('Error loading playlist:', error);
+      const container = document.getElementById(`${screenId}-list`);
+      if (container) {
+        container.innerHTML = '<div class="menu-item video-item"><span>Unable to load videos</span></div>';
+      }
     }
   }
 
-  function renderVideos(videos) {
-    const container = document.getElementById('videos-list');
+  function renderVideoList(containerId, artworkId, videos) {
+    const container = document.getElementById(containerId);
     if (!container) return;
 
     container.innerHTML = '';
 
     videos.forEach((video, index) => {
-      const thumb = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+      const thumb = video.thumbnail || `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`;
       const item = document.createElement('div');
       item.className = 'menu-item video-item';
-      item.dataset.href = video.link;
+      item.dataset.href = `https://www.youtube.com/watch?v=${video.id}`;
       item.dataset.thumb = thumb;
       item.innerHTML = `<span>${video.title}</span>`;
 
-      // Add click handler
       item.addEventListener('click', function(e) {
         e.stopPropagation();
         const menuList = this.closest('.menu-list');
@@ -1063,22 +1186,24 @@
 
       container.appendChild(item);
 
-      // Select first item and set artwork
       if (index === 0) {
         item.classList.add('selected');
-        const artworkImg = document.getElementById('video-artwork');
+        const artworkImg = document.getElementById(artworkId);
         if (artworkImg) artworkImg.src = thumb;
       }
     });
   }
 
-  function renderVideoError() {
-    const container = document.getElementById('videos-list');
+  function renderPlaylistError() {
+    const container = document.getElementById('playlists-list');
     if (!container) return;
 
     container.innerHTML = `
-      <div class="menu-item video-item">
-        <span>Unable to load videos</span>
+      <div class="menu-item" data-target="videos-all">
+        <span>All Videos</span>
+      </div>
+      <div class="menu-item">
+        <span>Unable to load playlists</span>
       </div>
     `;
   }
@@ -1092,8 +1217,8 @@
     init();
   }
 
-  // Load YouTube videos after init
-  setTimeout(loadYouTubeVideos, 100);
+  // Load YouTube data after init
+  setTimeout(initYouTubeData, 100);
 
   console.log('%c LIIM LASALLE ', 'background: #2d4a3e; color: #f5f0e6; font-size: 20px; font-weight: bold; padding: 8px 16px;');
   console.log('%c iPod Classic Edition ', 'color: #666; font-style: italic;');

@@ -198,15 +198,27 @@
           </div>
         </div>
 
-        <!-- Videos Screen -->
-        <div class="menu-screen has-artwork" data-screen="videos">
-          <div class="menu-list" id="videos-list">
+        <!-- Videos Menu Screen -->
+        <div class="menu-screen" data-screen="videos">
+          <div class="menu-list" id="playlists-list">
+            <div class="menu-item" data-target="videos-all">
+              <span>All Videos</span>
+            </div>
+            <div class="menu-item loading-item">
+              <span>Loading playlists...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Videos Screen -->
+        <div class="menu-screen has-artwork" data-screen="videos-all">
+          <div class="menu-list" id="all-videos-list">
             <div class="menu-item video-item loading-item">
               <span>Loading videos...</span>
             </div>
           </div>
           <div class="artwork-panel">
-            <img id="video-artwork" src="" alt="Video thumbnail">
+            <img id="all-videos-artwork" src="" alt="Video thumbnail">
           </div>
         </div>
 
@@ -296,6 +308,6 @@
     </div>
   </div>
 
-  <script src="ipod/js/ipod.js?v=30"></script>
+  <script src="ipod/js/ipod.js?v=31"></script>
 </body>
 </html>
