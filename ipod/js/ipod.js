@@ -1298,6 +1298,155 @@
   }
 
   // ============================================
+  // Bandsintown Events Integration
+  // ============================================
+  const BIT_ARTIST = 'Liim';
+  const BIT_APP_ID = 'liim.nyc';
+  const BIT_CACHE_KEY = 'liim_shows_data';
+  const BIT_CACHE_DURATION = 60 * 60 * 1000; // 1 hour
+
+  async function initBandsintownData() {
+    try {
+      // Check cache first
+      const cached = getShowsCache();
+      if (cached) {
+        renderShows(cached.events);
+        return;
+      }
+
+      const url = `https://rest.bandsintown.com/artists/${encodeURIComponent(BIT_ARTIST)}/events?app_id=${BIT_APP_ID}`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch shows');
+      }
+
+      const events = await response.json();
+
+      // Handle case where API returns an error object
+      if (events.Message || events.error) {
+        throw new Error(events.Message || events.error);
+      }
+
+      // Filter out past events and sort by date
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
+      const upcomingEvents = events
+        .filter(event => new Date(event.datetime) >= now)
+        .sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+      // Cache the data
+      setShowsCache({ events: upcomingEvents });
+
+      renderShows(upcomingEvents);
+    } catch (error) {
+      console.error('Bandsintown API error:', error);
+      renderShowsError();
+    }
+  }
+
+  function getShowsCache() {
+    try {
+      const cached = localStorage.getItem(BIT_CACHE_KEY);
+      if (!cached) return null;
+      const data = JSON.parse(cached);
+      if (Date.now() - data.timestamp > BIT_CACHE_DURATION) {
+        localStorage.removeItem(BIT_CACHE_KEY);
+        return null;
+      }
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setShowsCache(data) {
+    try {
+      localStorage.setItem(BIT_CACHE_KEY, JSON.stringify({
+        ...data,
+        timestamp: Date.now()
+      }));
+    } catch (e) {}
+  }
+
+  function renderShows(events) {
+    const container = document.getElementById('shows-list');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (!events || events.length === 0) {
+      container.innerHTML = '<div class="menu-item show-item"><span>No upcoming shows</span></div>';
+      return;
+    }
+
+    events.forEach((event, index) => {
+      const item = document.createElement('div');
+      item.className = 'menu-item show-item';
+
+      // Get ticket URL (prefer offers, fallback to event url)
+      const ticketUrl = event.offers && event.offers.length > 0
+        ? event.offers[0].url
+        : event.url;
+
+      if (ticketUrl) {
+        item.dataset.href = ticketUrl;
+      }
+
+      // Format date
+      const eventDate = new Date(event.datetime);
+      const dateStr = eventDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      });
+
+      // Build venue/location string
+      const venue = event.venue;
+      let locationStr = venue.name;
+      if (venue.city) {
+        locationStr += `, ${venue.city}`;
+        if (venue.region && venue.region !== venue.city) {
+          locationStr += `, ${venue.region}`;
+        }
+      }
+
+      // Event title (use lineup or description if available)
+      const title = event.title || event.lineup?.join(', ') || venue.name;
+
+      item.innerHTML = `
+        <span class="show-date">${title}</span>
+        <span class="show-info">${locationStr} (${dateStr})</span>
+      `;
+
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const items = container.querySelectorAll('.menu-item');
+        items.forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+        state.selectedIndex = Array.from(items).indexOf(this);
+
+        if (this.dataset.href) {
+          window.open(this.dataset.href, '_blank');
+        }
+      });
+
+      container.appendChild(item);
+
+      if (index === 0) {
+        item.classList.add('selected');
+      }
+    });
+  }
+
+  function renderShowsError() {
+    const container = document.getElementById('shows-list');
+    if (!container) return;
+
+    container.innerHTML = '<div class="menu-item show-item"><span>No upcoming shows</span></div>';
+  }
+
+  // ============================================
   // Initialize
   // ============================================
   if (document.readyState === 'loading') {
@@ -1308,6 +1457,9 @@
 
   // Load YouTube data after init
   setTimeout(initYouTubeData, 100);
+
+  // Load Bandsintown data after init
+  setTimeout(initBandsintownData, 150);
 
   console.log('%c LIIM LASALLE ', 'background: #2d4a3e; color: #f5f0e6; font-size: 20px; font-weight: bold; padding: 8px 16px;');
   console.log('%c iPod Classic Edition ', 'color: #666; font-style: italic;');
