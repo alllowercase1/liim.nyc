@@ -289,6 +289,11 @@ body {
   display: none;
 }
 
+.loading-item {
+  opacity: 0.6;
+  font-style: italic;
+}
+
 /* Artwork Panel Layout */
 .menu-screen.has-artwork {
   flex-direction: row;

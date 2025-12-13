@@ -954,6 +954,136 @@
   });
 
   // ============================================
+  // YouTube Feed Integration
+  // ============================================
+  const YOUTUBE_CHANNEL_ID = 'UC0DfoEyZOWDkyeOYa5Ejhtg';
+  const YOUTUBE_FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
+  const RSS2JSON_API = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(YOUTUBE_FEED_URL)}`;
+  const CACHE_KEY = 'liim_youtube_videos';
+  const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
+
+  function loadYouTubeVideos() {
+    // Check cache first
+    const cached = getCachedVideos();
+    if (cached) {
+      renderVideos(cached);
+      return;
+    }
+
+    // Fetch from RSS feed
+    fetch(RSS2JSON_API)
+      .then(response => {
+        if (!response.ok) throw new Error('Feed fetch failed');
+        return response.json();
+      })
+      .then(data => {
+        if (data.status !== 'ok' || !data.items) {
+          throw new Error('Invalid feed response');
+        }
+
+        const videos = data.items.map(item => ({
+          id: extractVideoId(item.link),
+          title: item.title,
+          link: item.link,
+          published: new Date(item.pubDate).getTime()
+        })).filter(v => v.id); // Filter out any without valid IDs
+
+        // Sort by most recent first
+        videos.sort((a, b) => b.published - a.published);
+
+        // Cache the results
+        cacheVideos(videos);
+        renderVideos(videos);
+      })
+      .catch(error => {
+        console.error('YouTube feed error:', error);
+        renderVideoError();
+      });
+  }
+
+  function extractVideoId(url) {
+    const match = url.match(/[?&]v=([^&]+)/);
+    return match ? match[1] : null;
+  }
+
+  function getCachedVideos() {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (!cached) return null;
+
+      const { videos, timestamp } = JSON.parse(cached);
+      if (Date.now() - timestamp > CACHE_DURATION) {
+        localStorage.removeItem(CACHE_KEY);
+        return null;
+      }
+      return videos;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function cacheVideos(videos) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        videos,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // localStorage might be full or disabled
+    }
+  }
+
+  function renderVideos(videos) {
+    const container = document.getElementById('videos-list');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    videos.forEach((video, index) => {
+      const thumb = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+      const item = document.createElement('div');
+      item.className = 'menu-item video-item';
+      item.dataset.href = video.link;
+      item.dataset.thumb = thumb;
+      item.innerHTML = `<span>${video.title}</span>`;
+
+      // Add click handler
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const menuList = this.closest('.menu-list');
+        const items = menuList.querySelectorAll('.menu-item');
+        items.forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+        state.selectedIndex = Array.from(items).indexOf(this);
+        updateArtwork(this);
+        setTimeout(() => {
+          playVideo(this.dataset.href, this.querySelector('span').textContent);
+        }, 100);
+      });
+
+      container.appendChild(item);
+
+      // Select first item and set artwork
+      if (index === 0) {
+        item.classList.add('selected');
+        const artworkImg = document.getElementById('video-artwork');
+        if (artworkImg) artworkImg.src = thumb;
+      }
+    });
+  }
+
+  function renderVideoError() {
+    const container = document.getElementById('videos-list');
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="menu-item video-item">
+        <span>Unable to load videos</span>
+      </div>
+    `;
+  }
+
+  // ============================================
   // Initialize
   // ============================================
   if (document.readyState === 'loading') {
@@ -961,6 +1091,9 @@
   } else {
     init();
   }
+
+  // Load YouTube videos after init
+  setTimeout(loadYouTubeVideos, 100);
 
   console.log('%c LIIM LASALLE ', 'background: #2d4a3e; color: #f5f0e6; font-size: 20px; font-weight: bold; padding: 8px 16px;');
   console.log('%c iPod Classic Edition ', 'color: #666; font-style: italic;');
