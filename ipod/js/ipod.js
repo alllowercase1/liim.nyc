@@ -705,6 +705,11 @@
 
     const target = selectedItem.dataset.target;
     if (target) {
+      // Check if this is a playlist item that needs videos loaded
+      const playlistId = selectedItem.dataset.playlistId;
+      if (playlistId && !document.querySelector(`[data-screen="${target}"] .video-item:not(.loading-item)`)) {
+        loadPlaylistVideos(playlistId, target);
+      }
       navigateTo(target);
     }
   }
@@ -1021,6 +1026,7 @@
 
       const pageVideos = data.items
         .filter(item => item.snippet.resourceId.kind === 'youtube#video')
+        .filter(item => !isYouTubeShort(item.snippet.title))
         .map(item => ({
           id: item.snippet.resourceId.videoId,
           title: item.snippet.title,
@@ -1035,6 +1041,14 @@
     // Sort by most recent first
     videos.sort((a, b) => b.published - a.published);
     return videos;
+  }
+
+  function isYouTubeShort(title) {
+    const lowerTitle = title.toLowerCase();
+    return lowerTitle.includes('#short') ||
+           lowerTitle.includes('#shorts') ||
+           lowerTitle.startsWith('short') ||
+           lowerTitle.includes(' short ');
   }
 
   function getYTCache() {
