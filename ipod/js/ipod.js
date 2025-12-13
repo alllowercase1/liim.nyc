@@ -1018,6 +1018,7 @@
     let videos = [];
     let nextPageToken = '';
 
+    // First, fetch all playlist items
     do {
       const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50&key=${YT_API_KEY}${nextPageToken ? '&pageToken=' + nextPageToken : ''}`;
       const response = await fetch(url);
@@ -1026,7 +1027,6 @@
 
       const pageVideos = data.items
         .filter(item => item.snippet.resourceId.kind === 'youtube#video')
-        .filter(item => !isYouTubeShort(item.snippet.title))
         .map(item => ({
           id: item.snippet.resourceId.videoId,
           title: item.snippet.title,
@@ -1038,17 +1038,54 @@
       nextPageToken = data.nextPageToken || '';
     } while (nextPageToken);
 
+    // Filter out Shorts by checking video duration (Shorts are ≤60 seconds)
+    videos = await filterOutShorts(videos);
+
     // Sort by most recent first
     videos.sort((a, b) => b.published - a.published);
     return videos;
   }
 
-  function isYouTubeShort(title) {
-    const lowerTitle = title.toLowerCase();
-    return lowerTitle.includes('#short') ||
-           lowerTitle.includes('#shorts') ||
-           lowerTitle.startsWith('short') ||
-           lowerTitle.includes(' short ');
+  async function filterOutShorts(videos) {
+    if (videos.length === 0) return videos;
+
+    // Batch fetch video details (max 50 per request)
+    const durations = {};
+    for (let i = 0; i < videos.length; i += 50) {
+      const batch = videos.slice(i, i + 50);
+      const ids = batch.map(v => v.id).join(',');
+      const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${YT_API_KEY}`;
+
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+          data.items.forEach(item => {
+            durations[item.id] = parseDuration(item.contentDetails.duration);
+          });
+        }
+      } catch (e) {
+        console.error('Error fetching video details:', e);
+      }
+    }
+
+    // Filter out videos ≤60 seconds (Shorts)
+    return videos.filter(video => {
+      const duration = durations[video.id];
+      // If we couldn't get duration, keep the video
+      if (duration === undefined) return true;
+      return duration > 60;
+    });
+  }
+
+  // Parse ISO 8601 duration (PT1M30S, PT45S, PT1H2M3S) to seconds
+  function parseDuration(iso8601) {
+    const match = iso8601.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!match) return 0;
+    const hours = parseInt(match[1] || 0);
+    const minutes = parseInt(match[2] || 0);
+    const seconds = parseInt(match[3] || 0);
+    return hours * 3600 + minutes * 60 + seconds;
   }
 
   function getYTCache() {
