@@ -1301,7 +1301,7 @@
   // Bandsintown Events Integration
   // ============================================
   const BIT_ARTIST = 'Liim';
-  const BIT_APP_ID = 'liim.nyc';
+  const BIT_APP_ID = 'eccccc534111a1ff12de94fa07f4d67b';
   const BIT_CACHE_KEY = 'liim_shows_data';
   const BIT_CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
