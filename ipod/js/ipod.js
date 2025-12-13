@@ -1001,17 +1001,25 @@
     }
   }
 
+  // Playlists to hide from the menu
+  const HIDDEN_PLAYLISTS = [
+    'Official Releases',
+    'Official Music Videos'
+  ];
+
   async function fetchChannelPlaylists() {
     const url = `https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId=${YT_CHANNEL_ID}&maxResults=50&key=${YT_API_KEY}`;
     const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to fetch playlists');
     const data = await response.json();
 
-    return data.items.map(item => ({
-      id: item.id,
-      title: item.snippet.title,
-      thumbnail: item.snippet.thumbnails?.medium?.url || ''
-    }));
+    return data.items
+      .filter(item => !HIDDEN_PLAYLISTS.includes(item.snippet.title))
+      .map(item => ({
+        id: item.id,
+        title: item.snippet.title,
+        thumbnail: item.snippet.thumbnails?.medium?.url || ''
+      }));
   }
 
   async function fetchAllPlaylistVideos(playlistId) {
