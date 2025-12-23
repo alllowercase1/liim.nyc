@@ -1104,3 +1104,138 @@ img {
   -webkit-user-drag: none;
   user-drag: none;
 }
+
+/* ============================================
+   Worn/Used iPod Effect
+   ============================================ */
+
+/* Aged body color */
+.ipod-device {
+  background: linear-gradient(180deg,
+    #f5f3ef 0%,
+    #eceae4 8%,
+    #e4e1da 50%,
+    #d6d3cc 92%,
+    #c8c5be 100%
+  );
+}
+
+/* Cloudy wear overlay on body */
+.ipod-device::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52%;
+  border-radius: 18px 18px 0 0;
+  pointer-events: none;
+  z-index: 10;
+  background:
+    radial-gradient(ellipse 80px 60px at 25% 40%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 40%, transparent 70%),
+    radial-gradient(ellipse 50px 40px at 70% 30%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 50%, transparent 80%),
+    radial-gradient(ellipse 60px 45px at 15% 75%, rgba(255,255,255,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40px 55px at 80% 65%, rgba(255,255,255,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse at 0% 50%, rgba(0,0,0,0.04) 0%, transparent 30%),
+    radial-gradient(ellipse at 100% 50%, rgba(0,0,0,0.03) 0%, transparent 25%);
+}
+
+/* Screen worn effects */
+.ipod-screen {
+  background: #bcc7ca;
+  position: relative;
+}
+
+/* Cloudy haze on screen */
+.ipod-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 85% 65% at 25% 40%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 30%, transparent 55%),
+    radial-gradient(ellipse 65% 75% at 80% 55%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 35%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 15% 75%, rgba(255,255,255,0.2) 0%, transparent 45%),
+    radial-gradient(ellipse 50% 40% at 90% 20%, rgba(255,255,255,0.18) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
+}
+
+/* Noise texture on screen */
+.ipod-screen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 101;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+}
+
+/* SVG scratches layer 1 */
+.screen-content {
+  position: relative;
+}
+
+.screen-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 102;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Cdefs%3E%3ClinearGradient id='s' x1='0%25' y1='50%25' x2='100%25' y2='50%25'%3E%3Cstop offset='0%25' stop-color='white' stop-opacity='0'/%3E%3Cstop offset='30%25' stop-color='white' stop-opacity='0.4'/%3E%3Cstop offset='50%25' stop-color='white' stop-opacity='0.5'/%3E%3Cstop offset='70%25' stop-color='white' stop-opacity='0.4'/%3E%3Cstop offset='100%25' stop-color='white' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cline x1='15' y1='25' x2='55' y2='35' stroke='url(%23s)' stroke-width='1'/%3E%3Cline x1='20' y1='32' x2='48' y2='28' stroke='url(%23s)' stroke-width='0.8'/%3E%3Cline x1='25' y1='18' x2='42' y2='38' stroke='url(%23s)' stroke-width='0.6'/%3E%3Cline x1='35' y1='40' x2='52' y2='45' stroke='url(%23s)' stroke-width='0.5'/%3E%3Cline x1='80' y1='55' x2='130' y2='70' stroke='url(%23s)' stroke-width='1'/%3E%3Cline x1='95' y1='75' x2='115' y2='65' stroke='url(%23s)' stroke-width='0.7'/%3E%3Cline x1='70' y1='80' x2='88' y2='72' stroke='url(%23s)' stroke-width='0.5'/%3E%3Cline x1='140' y1='100' x2='175' y2='115' stroke='url(%23s)' stroke-width='0.9'/%3E%3Cline x1='145' y1='110' x2='168' y2='105' stroke='url(%23s)' stroke-width='0.6'/%3E%3Cline x1='155' y1='95' x2='180' y2='108' stroke='url(%23s)' stroke-width='0.7'/%3E%3Cline x1='135' y1='118' x2='155' y2='125' stroke='url(%23s)' stroke-width='0.5'/%3E%3Cline x1='60' y1='20' x2='72' y2='25' stroke='url(%23s)' stroke-width='0.4'/%3E%3Cline x1='160' y1='40' x2='175' y2='35' stroke='url(%23s)' stroke-width='0.5'/%3E%3Cline x1='30' y1='90' x2='45' y2='95' stroke='url(%23s)' stroke-width='0.4'/%3E%3Cline x1='110' y1='30' x2='125' y2='40' stroke='url(%23s)' stroke-width='0.5'/%3E%3Cline x1='50' y1='110' x2='68' y2='118' stroke='url(%23s)' stroke-width='0.6'/%3E%3Cline x1='180' y1='70' x2='192' y2='65' stroke='url(%23s)' stroke-width='0.4'/%3E%3Cline x1='8' y1='65' x2='22' y2='58' stroke='url(%23s)' stroke-width='0.5'/%3E%3Cline x1='90' y1='120' x2='108' y2='128' stroke='url(%23s)' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  opacity: 0.7;
+}
+
+/* SVG scratches layer 2 */
+.screen-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 103;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='150'%3E%3Cdefs%3E%3ClinearGradient id='s2' x1='0%25' y1='50%25' x2='100%25' y2='50%25'%3E%3Cstop offset='0%25' stop-color='white' stop-opacity='0'/%3E%3Cstop offset='25%25' stop-color='white' stop-opacity='0.35'/%3E%3Cstop offset='50%25' stop-color='white' stop-opacity='0.45'/%3E%3Cstop offset='75%25' stop-color='white' stop-opacity='0.35'/%3E%3Cstop offset='100%25' stop-color='white' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cline x1='45' y1='60' x2='80' y2='50' stroke='url(%23s2)' stroke-width='0.8'/%3E%3Cline x1='120' y1='85' x2='145' y2='95' stroke='url(%23s2)' stroke-width='0.6'/%3E%3Cline x1='10' y1='100' x2='35' y2='85' stroke='url(%23s2)' stroke-width='0.7'/%3E%3Cline x1='165' y1='25' x2='185' y2='45' stroke='url(%23s2)' stroke-width='0.5'/%3E%3Cline x1='75' y1='10' x2='95' y2='18' stroke='url(%23s2)' stroke-width='0.5'/%3E%3Cline x1='55' y1='130' x2='75' y2='138' stroke='url(%23s2)' stroke-width='0.4'/%3E%3Cline x1='130' y1='55' x2='148' y2='48' stroke='url(%23s2)' stroke-width='0.5'/%3E%3Cline x1='25' y1='140' x2='42' y2='132' stroke='url(%23s2)' stroke-width='0.4'/%3E%3Cline x1='170' y1='130' x2='188' y2='140' stroke='url(%23s2)' stroke-width='0.5'/%3E%3Cline x1='100' y1='100' x2='112' y2='108' stroke='url(%23s2)' stroke-width='0.4'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  opacity: 0.6;
+}
+
+/* Worn click wheel */
+.click-wheel {
+  background: linear-gradient(180deg, #c6c4be 0%, #c2c0ba 100%);
+}
+
+/* Cloudy wear on wheel */
+.click-wheel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 60% 50% at 35% 40%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 40%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 70% 55%, rgba(255,255,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 35% at 25% 70%, rgba(255,255,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Worn center button */
+.center-button {
+  background: linear-gradient(180deg, #f8f6f0 0%, #eae8e2 30%, #dcdad4 70%, #cccac4 100%);
+}
