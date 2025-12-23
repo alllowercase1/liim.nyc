@@ -380,6 +380,9 @@
     // Update UI
     document.getElementById('now-playing-title').textContent = track.title;
     document.getElementById('now-playing-cover').src = albumCover;
+    document.getElementById('now-playing-artist').textContent = 'Liim';
+    document.getElementById('now-playing-album').textContent = 'Liim Lasalle Loves You';
+    document.getElementById('now-playing-stars').textContent = '★★★★★';
     document.getElementById('track-number').textContent = (index + 1) + ' of ' + trackList.length;
     updatePlayingIndicator();
   }
