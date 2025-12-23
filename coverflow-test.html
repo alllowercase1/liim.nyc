@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Flow - Liim Press Photos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .coverflow-container {
+      width: 100%;
+      height: 100vh;
+      perspective: 1000px;
+      perspective-origin: 50% 40%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coverflow-stage {
+      position: absolute;
+      width: 100%;
+      height: 60%;
+      top: 15%;
+      transform-style: preserve-3d;
+    }
+
+    .coverflow-item {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 300px;
+      height: 300px;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+                  opacity 0.5s ease,
+                  filter 0.5s ease;
+      cursor: pointer;
+    }
+
+    .coverflow-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Reflection */
+    .coverflow-item::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        transparent 50%
+      );
+      transform: scaleY(-1);
+      pointer-events: none;
+      border-radius: 4px;
+      opacity: 0.4;
+    }
+
+    .coverflow-item .reflection {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      transform: scaleY(-1) translateY(-2px);
+      overflow: hidden;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 60%);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 60%);
+    }
+
+    .coverflow-item .reflection img {
+      width: 100%;
+      height: auto;
+      filter: blur(1px);
+    }
+
+    /* Floor gradient */
+    .coverflow-floor {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(20, 20, 20, 0.8) 30%,
+        #111 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Navigation hints */
+    .nav-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Loading state */
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+    }
+
+    /* Counter */
+    .counter {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .coverflow-item {
+        width: 200px;
+        height: 200px;
+      }
+
+      .coverflow-container {
+        perspective: 800px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .coverflow-item {
+        width: 160px;
+        height: 160px;
+      }
+
+      .coverflow-container {
+        perspective: 600px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="coverflow-container" id="coverflow">
+    <div class="coverflow-stage" id="stage"></div>
+    <div class="coverflow-floor"></div>
+    <div class="counter" id="counter">1 / 21</div>
+    <div class="nav-hint">Scroll or use arrow keys</div>
+  </div>
+
+  <script>
+    const images = [
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1649-3.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1653.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1659-2.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1672.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1677.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1679.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1680.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1683.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1687.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1693.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1704.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1706.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1709.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1710.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1712.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1713.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1715.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1717.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1720.jpg',
+      '/Users/jpl/Desktop/Liim Press LG JPEG/0W0A1723.jpg'
+    ];
+
+    class CoverFlow {
+      constructor(container, images) {
+        this.container = container;
+        this.stage = container.querySelector('#stage');
+        this.counter = container.querySelector('#counter');
+        this.images = images;
+        this.currentIndex = 0;
+        this.items = [];
+        this.isAnimating = false;
+
+        // Touch handling
+        this.touchStartX = 0;
+        this.touchStartY = 0;
+        this.isSwiping = false;
+
+        // Scroll handling
+        this.scrollAccumulator = 0;
+        this.scrollThreshold = 50;
+
+        this.init();
+      }
+
+      init() {
+        this.createItems();
+        this.bindEvents();
+        this.updatePositions();
+      }
+
+      createItems() {
+        this.images.forEach((src, index) => {
+          const item = document.createElement('div');
+          item.className = 'coverflow-item';
+          item.dataset.index = index;
+
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = `Photo ${index + 1}`;
+          img.loading = index < 5 ? 'eager' : 'lazy';
+
+          // Create reflection
+          const reflection = document.createElement('div');
+          reflection.className = 'reflection';
+          const reflectionImg = document.createElement('img');
+          reflectionImg.src = src;
+          reflectionImg.alt = '';
+          reflectionImg.loading = 'lazy';
+          reflection.appendChild(reflectionImg);
+
+          item.appendChild(img);
+          item.appendChild(reflection);
+          this.stage.appendChild(item);
+          this.items.push(item);
+
+          item.addEventListener('click', () => {
+            if (index !== this.currentIndex) {
+              this.goTo(index);
+            }
+          });
+        });
+      }
+
+      updatePositions() {
+        const sideOffset = 110; // Spacing between stacked items
+        const sideAngle = 70; // Rotation angle for side items
+        const baseGap = 200; // Gap between center and first side item
+
+        this.items.forEach((item, index) => {
+          const diff = index - this.currentIndex;
+          let transform, opacity, zIndex;
+
+          if (diff === 0) {
+            // Center item
+            transform = `translate(-50%, -50%) translateX(0) translateZ(150px) rotateY(0deg)`;
+            opacity = 1;
+            zIndex = 100;
+          } else if (diff < 0) {
+            // Left side - stacked
+            const stackPos = Math.abs(diff) - 1;
+            const offset = -baseGap - (stackPos * sideOffset);
+            const z = -50 - (stackPos * 25);
+            const angle = sideAngle;
+            transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(${angle}deg)`;
+            opacity = Math.max(0.85, 1 - Math.abs(diff) * 0.03);
+            zIndex = 50 + diff;
+          } else {
+            // Right side - stacked
+            const stackPos = diff - 1;
+            const offset = baseGap + (stackPos * sideOffset);
+            const z = -50 - (stackPos * 25);
+            const angle = -sideAngle;
+            transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(${angle}deg)`;
+            opacity = Math.max(0.85, 1 - diff * 0.03);
+            zIndex = 50 - diff;
+          }
+
+          // Hide items too far from center
+          if (Math.abs(diff) > 6) {
+            opacity = 0;
+            item.style.pointerEvents = 'none';
+          } else {
+            item.style.pointerEvents = 'auto';
+          }
+
+          item.style.transform = transform;
+          item.style.opacity = opacity;
+          item.style.zIndex = zIndex;
+        });
+
+        this.counter.textContent = `${this.currentIndex + 1} / ${this.images.length}`;
+      }
+
+      goTo(index) {
+        if (this.isAnimating) return;
+        if (index < 0) index = 0;
+        if (index >= this.images.length) index = this.images.length - 1;
+
+        if (index === this.currentIndex) return;
+
+        this.isAnimating = true;
+        this.currentIndex = index;
+        this.updatePositions();
+
+        setTimeout(() => {
+          this.isAnimating = false;
+        }, 500);
+      }
+
+      next() {
+        this.goTo(this.currentIndex + 1);
+      }
+
+      prev() {
+        this.goTo(this.currentIndex - 1);
+      }
+
+      bindEvents() {
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            this.prev();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            this.next();
+          }
+        });
+
+        // Mouse wheel
+        this.container.addEventListener('wheel', (e) => {
+          e.preventDefault();
+
+          this.scrollAccumulator += e.deltaY;
+
+          if (Math.abs(this.scrollAccumulator) >= this.scrollThreshold) {
+            if (this.scrollAccumulator > 0) {
+              this.next();
+            } else {
+              this.prev();
+            }
+            this.scrollAccumulator = 0;
+          }
+        }, { passive: false });
+
+        // Touch events
+        this.container.addEventListener('touchstart', (e) => {
+          this.touchStartX = e.touches[0].clientX;
+          this.touchStartY = e.touches[0].clientY;
+          this.isSwiping = true;
+        }, { passive: true });
+
+        this.container.addEventListener('touchmove', (e) => {
+          if (!this.isSwiping) return;
+
+          const deltaX = e.touches[0].clientX - this.touchStartX;
+          const deltaY = e.touches[0].clientY - this.touchStartY;
+
+          // Only handle horizontal swipes
+          if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+        this.container.addEventListener('touchend', (e) => {
+          if (!this.isSwiping) return;
+
+          const deltaX = e.changedTouches[0].clientX - this.touchStartX;
+          const threshold = 50;
+
+          if (Math.abs(deltaX) > threshold) {
+            if (deltaX > 0) {
+              this.prev();
+            } else {
+              this.next();
+            }
+          }
+
+          this.isSwiping = false;
+        }, { passive: true });
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('coverflow');
+      new CoverFlow(container, images);
+    });
+  </script>
+</body>
+</html>

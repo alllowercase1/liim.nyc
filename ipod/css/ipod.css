@@ -1131,12 +1131,13 @@ img {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   transform-style: preserve-3d;
   transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.4s ease;
   will-change: transform, opacity;
   backface-visibility: hidden;
+  cursor: pointer;
 }
 
 .coverflow-item img {
@@ -1185,16 +1186,16 @@ img {
   }
 
   .coverflow-item {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
 }
 
 /* Tablet Cover Flow */
 @media (min-width: 481px) and (max-width: 1024px) {
   .coverflow-item {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
 }
 
@@ -1205,9 +1206,32 @@ img {
   }
 
   .coverflow-item {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
   }
+}
+
+/* Fullscreen photo overlay */
+.photo-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.photo-fullscreen img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
 }
 
 /* ============================================

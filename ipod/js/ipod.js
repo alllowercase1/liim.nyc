@@ -147,6 +147,28 @@
         item.appendChild(reflection);
         this.stage.appendChild(item);
         this.items.push(item);
+
+        // Click to view fullscreen (only center image)
+        item.addEventListener('click', () => {
+          if (index === this.currentIndex) {
+            this.openFullscreen(src);
+          } else {
+            this.goTo(index);
+          }
+        });
+      });
+    }
+
+    openFullscreen(src) {
+      const overlay = document.createElement('div');
+      overlay.className = 'photo-fullscreen';
+      const img = document.createElement('img');
+      img.src = src;
+      overlay.appendChild(img);
+      document.body.appendChild(overlay);
+
+      overlay.addEventListener('click', () => {
+        overlay.remove();
       });
     }
 
@@ -547,8 +569,10 @@
 
       state.accumulatedAngle += delta;
 
-      // Threshold for volume control (less sensitive than menu scrolling)
-      const threshold = state.currentScreen === 'music-player' ? 12 : state.scrollThreshold;
+      // Threshold: photos more sensitive for easy scrubbing, volume less sensitive
+      const threshold = state.currentScreen === 'music-player' ? 12
+        : state.currentScreen === 'photos' ? 8
+        : state.scrollThreshold;
 
       if (Math.abs(state.accumulatedAngle) >= threshold) {
         state.hasMoved = true;
@@ -596,8 +620,10 @@
 
       state.accumulatedAngle += delta;
 
-      // Threshold for volume control (less sensitive than menu scrolling)
-      const threshold = state.currentScreen === 'music-player' ? 12 : state.scrollThreshold;
+      // Threshold: photos more sensitive for easy scrubbing, volume less sensitive
+      const threshold = state.currentScreen === 'music-player' ? 12
+        : state.currentScreen === 'photos' ? 8
+        : state.scrollThreshold;
 
       if (Math.abs(state.accumulatedAngle) >= threshold) {
         state.hasMoved = true;
@@ -1055,7 +1081,10 @@
 
       scrollAccumulator += e.deltaY;
 
-      if (Math.abs(scrollAccumulator) >= scrollThreshold) {
+      // Photos use lower threshold for faster scrubbing
+      const threshold = state.currentScreen === 'photos' ? 15 : scrollThreshold;
+
+      if (Math.abs(scrollAccumulator) >= threshold) {
         const direction = scrollAccumulator > 0 ? 1 : -1;
 
         if (state.currentScreen === 'music-player') {
