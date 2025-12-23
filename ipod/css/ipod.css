@@ -1213,6 +1213,10 @@ img {
 }
 
 /* In-screen fullscreen mode */
+.coverflow-container.fullscreen-mode {
+  background: #000;
+}
+
 .coverflow-container.fullscreen-mode .coverflow-stage {
   height: 100%;
   top: 0;
@@ -1225,8 +1229,11 @@ img {
 .coverflow-item.fullscreen {
   width: 100% !important;
   height: 100% !important;
+  left: 50% !important;
+  top: 50% !important;
   transform: translate(-50%, -50%) translateZ(0) rotateY(0deg) !important;
   z-index: 200 !important;
+  background: #000;
 }
 
 .coverflow-item.fullscreen .reflection {
@@ -1236,6 +1243,7 @@ img {
 .coverflow-item.fullscreen img {
   object-fit: contain;
   border-radius: 0;
+  background: #000;
 }
 
 /* ============================================

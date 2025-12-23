@@ -162,56 +162,69 @@
     toggleFullscreen() {
       this.isFullscreen = !this.isFullscreen;
       this.container.classList.toggle('fullscreen-mode', this.isFullscreen);
+      this.updatePositions();
+    }
 
+    exitFullscreen() {
       if (this.isFullscreen) {
-        // Hide all except current, show current fullscreen
-        this.items.forEach((item, index) => {
-          if (index === this.currentIndex) {
-            item.classList.add('fullscreen');
-          } else {
-            item.style.opacity = '0';
-          }
-        });
-      } else {
-        // Restore normal view
-        this.items.forEach(item => {
-          item.classList.remove('fullscreen');
-        });
+        this.isFullscreen = false;
+        this.container.classList.remove('fullscreen-mode');
         this.updatePositions();
+        return true; // consumed the back action
       }
+      return false; // did not consume, let goBack handle it
     }
 
     updatePositions() {
-      const sideOffset = 28;
-      const sideAngle = 70;
-      const baseGap = 50;
+      // Wider gap and less extreme angle so side photos aren't squished
+      const sideOffset = 32;
+      const sideAngle = 55;
+      const baseGap = 70;
 
       this.items.forEach((item, index) => {
         const diff = index - this.currentIndex;
         let transform, opacity, zIndex;
 
-        if (diff === 0) {
-          transform = `translate(-50%, -50%) translateX(0) translateZ(50px) rotateY(0deg)`;
-          opacity = 1;
-          zIndex = 100;
-        } else if (diff < 0) {
-          const stackPos = Math.abs(diff) - 1;
-          const offset = -baseGap - (stackPos * sideOffset);
-          const z = -20 - (stackPos * 10);
-          transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(${sideAngle}deg)`;
-          opacity = Math.max(0.85, 1 - Math.abs(diff) * 0.03);
-          zIndex = 50 + diff;
+        if (this.isFullscreen) {
+          // In fullscreen mode: current image fills screen, others hidden
+          if (diff === 0) {
+            transform = `translate(-50%, -50%) translateZ(0) rotateY(0deg)`;
+            opacity = 1;
+            zIndex = 100;
+            item.classList.add('fullscreen');
+          } else {
+            transform = `translate(-50%, -50%) translateX(${diff * 200}px) translateZ(-100px) rotateY(0deg)`;
+            opacity = 0;
+            zIndex = 1;
+            item.classList.remove('fullscreen');
+          }
         } else {
-          const stackPos = diff - 1;
-          const offset = baseGap + (stackPos * sideOffset);
-          const z = -20 - (stackPos * 10);
-          transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(-${sideAngle}deg)`;
-          opacity = Math.max(0.85, 1 - diff * 0.03);
-          zIndex = 50 - diff;
-        }
+          // Normal cover flow mode
+          item.classList.remove('fullscreen');
 
-        if (Math.abs(diff) > 6) {
-          opacity = 0;
+          if (diff === 0) {
+            transform = `translate(-50%, -50%) translateX(0) translateZ(50px) rotateY(0deg)`;
+            opacity = 1;
+            zIndex = 100;
+          } else if (diff < 0) {
+            const stackPos = Math.abs(diff) - 1;
+            const offset = -baseGap - (stackPos * sideOffset);
+            const z = -20 - (stackPos * 10);
+            transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(${sideAngle}deg)`;
+            opacity = Math.max(0.85, 1 - Math.abs(diff) * 0.03);
+            zIndex = 50 + diff;
+          } else {
+            const stackPos = diff - 1;
+            const offset = baseGap + (stackPos * sideOffset);
+            const z = -20 - (stackPos * 10);
+            transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(-${sideAngle}deg)`;
+            opacity = Math.max(0.85, 1 - diff * 0.03);
+            zIndex = 50 - diff;
+          }
+
+          if (Math.abs(diff) > 6) {
+            opacity = 0;
+          }
         }
 
         item.style.transform = transform;
@@ -229,7 +242,7 @@
       this.currentIndex = index;
       this.updatePositions();
 
-      setTimeout(() => { this.isAnimating = false; }, 250);
+      setTimeout(() => { this.isAnimating = false; }, 200);
     }
 
     next() { this.goTo(this.currentIndex + 1); }
@@ -768,6 +781,11 @@
       }
     });
 
+    // Need touchstart to ensure touchend fires properly on mobile
+    centerButton.addEventListener('touchstart', function(e) {
+      e.stopPropagation();
+    }, { passive: true });
+
     centerButton.addEventListener('touchend', function(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -1000,7 +1018,7 @@
 
     // Initialize Cover Flow when entering Photos
     if (screenId === 'photos') {
-      setTimeout(initCoverFlow, 100);
+      initCoverFlow();
     }
 
     setTimeout(() => {
@@ -1009,6 +1027,11 @@
   }
 
   function goBack() {
+    // If in photo fullscreen mode, exit fullscreen first
+    if (state.currentScreen === 'photos' && coverFlow && coverFlow.exitFullscreen()) {
+      return; // consumed by exiting fullscreen
+    }
+
     if (state.navigationHistory.length === 0) return;
 
     // Stop video if leaving video player
@@ -1082,6 +1105,7 @@
   // Scroll Wheel Support (Desktop - hover over click wheel)
   // ============================================
   let scrollAccumulator = 0;
+  let scrollResetTimeout = null;
   const scrollThreshold = 25;
 
   function initScrollWheelSupport() {
@@ -1091,6 +1115,10 @@
     // Listen only on the click wheel element
     clickWheel.addEventListener('wheel', function(e) {
       e.preventDefault();
+
+      // Reset accumulator after brief pause to prevent momentum
+      clearTimeout(scrollResetTimeout);
+      scrollResetTimeout = setTimeout(() => { scrollAccumulator = 0; }, 100);
 
       scrollAccumulator += e.deltaY;
 
