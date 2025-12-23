@@ -105,12 +105,14 @@
 
   class CoverFlow {
     constructor(container, images) {
+      this.container = container;
       this.stage = container.querySelector('#coverflow-stage');
       this.images = images;
       this.currentIndex = 0;
       this.items = [];
       this.isAnimating = false;
       this.initialized = false;
+      this.isFullscreen = false;
     }
 
     init() {
@@ -148,28 +150,35 @@
         this.stage.appendChild(item);
         this.items.push(item);
 
-        // Click to view fullscreen (only center image)
+        // Click side images to navigate to them
         item.addEventListener('click', () => {
-          if (index === this.currentIndex) {
-            this.openFullscreen(src);
-          } else {
+          if (index !== this.currentIndex) {
             this.goTo(index);
           }
         });
       });
     }
 
-    openFullscreen(src) {
-      const overlay = document.createElement('div');
-      overlay.className = 'photo-fullscreen';
-      const img = document.createElement('img');
-      img.src = src;
-      overlay.appendChild(img);
-      document.body.appendChild(overlay);
+    toggleFullscreen() {
+      this.isFullscreen = !this.isFullscreen;
+      this.container.classList.toggle('fullscreen-mode', this.isFullscreen);
 
-      overlay.addEventListener('click', () => {
-        overlay.remove();
-      });
+      if (this.isFullscreen) {
+        // Hide all except current, show current fullscreen
+        this.items.forEach((item, index) => {
+          if (index === this.currentIndex) {
+            item.classList.add('fullscreen');
+          } else {
+            item.style.opacity = '0';
+          }
+        });
+      } else {
+        // Restore normal view
+        this.items.forEach(item => {
+          item.classList.remove('fullscreen');
+        });
+        this.updatePositions();
+      }
     }
 
     updatePositions() {
@@ -220,7 +229,7 @@
       this.currentIndex = index;
       this.updatePositions();
 
-      setTimeout(() => { this.isAnimating = false; }, 400);
+      setTimeout(() => { this.isAnimating = false; }, 250);
     }
 
     next() { this.goTo(this.currentIndex + 1); }
@@ -571,7 +580,7 @@
 
       // Threshold: photos more sensitive for easy scrubbing, volume less sensitive
       const threshold = state.currentScreen === 'music-player' ? 12
-        : state.currentScreen === 'photos' ? 8
+        : state.currentScreen === 'photos' ? 5
         : state.scrollThreshold;
 
       if (Math.abs(state.accumulatedAngle) >= threshold) {
@@ -622,7 +631,7 @@
 
       // Threshold: photos more sensitive for easy scrubbing, volume less sensitive
       const threshold = state.currentScreen === 'music-player' ? 12
-        : state.currentScreen === 'photos' ? 8
+        : state.currentScreen === 'photos' ? 5
         : state.scrollThreshold;
 
       if (Math.abs(state.accumulatedAngle) >= threshold) {
@@ -752,6 +761,8 @@
         togglePlayPause();
       } else if (state.currentScreen === 'video-player') {
         toggleVideoPlayPause();
+      } else if (state.currentScreen === 'photos' && coverFlow) {
+        coverFlow.toggleFullscreen();
       } else {
         selectItem();
       }
@@ -765,6 +776,8 @@
         togglePlayPause();
       } else if (state.currentScreen === 'video-player') {
         toggleVideoPlayPause();
+      } else if (state.currentScreen === 'photos' && coverFlow) {
+        coverFlow.toggleFullscreen();
       } else {
         selectItem();
       }
@@ -1082,7 +1095,7 @@
       scrollAccumulator += e.deltaY;
 
       // Photos use lower threshold for faster scrubbing
-      const threshold = state.currentScreen === 'photos' ? 15 : scrollThreshold;
+      const threshold = state.currentScreen === 'photos' ? 10 : scrollThreshold;
 
       if (Math.abs(scrollAccumulator) >= threshold) {
         const direction = scrollAccumulator > 0 ? 1 : -1;
