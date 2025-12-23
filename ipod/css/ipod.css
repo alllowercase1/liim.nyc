@@ -784,7 +784,7 @@ body {
     0 1px 3px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   touch-action: none;
-  margin-top: auto;
+  margin-top: 20px;
 }
 
 .click-wheel.active {
@@ -1104,6 +1104,110 @@ body {
 img {
   -webkit-user-drag: none;
   user-drag: none;
+}
+
+/* ============================================
+   Cover Flow (Photos)
+   ============================================ */
+.coverflow-container {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  perspective: 400px;
+  perspective-origin: 50% 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.coverflow-stage {
+  position: absolute;
+  width: 100%;
+  height: 70%;
+  top: 10%;
+  transform-style: preserve-3d;
+}
+
+.coverflow-item {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 80px;
+  height: 80px;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.4s ease;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.coverflow-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  backface-visibility: hidden;
+}
+
+.coverflow-item .reflection {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  transform: scaleY(-1);
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.3;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
+}
+
+.coverflow-item .reflection img {
+  width: 100%;
+  height: auto;
+  filter: blur(0.5px);
+}
+
+.coverflow-reflection-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 100%);
+  pointer-events: none;
+}
+
+/* Mobile Cover Flow */
+@media (max-width: 480px) {
+  .coverflow-container {
+    perspective: 300px;
+  }
+
+  .coverflow-item {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* Tablet Cover Flow */
+@media (min-width: 481px) and (max-width: 1024px) {
+  .coverflow-item {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* Desktop Cover Flow */
+@media (min-width: 1025px) {
+  .coverflow-container {
+    perspective: 500px;
+  }
+
+  .coverflow-item {
+    width: 120px;
+    height: 120px;
+  }
 }
 
 /* ============================================

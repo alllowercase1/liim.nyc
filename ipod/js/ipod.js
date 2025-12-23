@@ -76,6 +76,143 @@
   };
 
   // ============================================
+  // Cover Flow Photos
+  // ============================================
+  const photoList = [
+    'ipod/assets/photos/0W0A1649-3.jpg',
+    'ipod/assets/photos/0W0A1653.jpg',
+    'ipod/assets/photos/0W0A1659-2.jpg',
+    'ipod/assets/photos/0W0A1672.jpg',
+    'ipod/assets/photos/0W0A1677.jpg',
+    'ipod/assets/photos/0W0A1679.jpg',
+    'ipod/assets/photos/0W0A1680.jpg',
+    'ipod/assets/photos/0W0A1683.jpg',
+    'ipod/assets/photos/0W0A1687.jpg',
+    'ipod/assets/photos/0W0A1693.jpg',
+    'ipod/assets/photos/0W0A1704.jpg',
+    'ipod/assets/photos/0W0A1706.jpg',
+    'ipod/assets/photos/0W0A1709.jpg',
+    'ipod/assets/photos/0W0A1710.jpg',
+    'ipod/assets/photos/0W0A1712.jpg',
+    'ipod/assets/photos/0W0A1713.jpg',
+    'ipod/assets/photos/0W0A1715.jpg',
+    'ipod/assets/photos/0W0A1717.jpg',
+    'ipod/assets/photos/0W0A1720.jpg',
+    'ipod/assets/photos/0W0A1723.jpg'
+  ];
+
+  let coverFlow = null;
+
+  class CoverFlow {
+    constructor(container, images) {
+      this.stage = container.querySelector('#coverflow-stage');
+      this.images = images;
+      this.currentIndex = 0;
+      this.items = [];
+      this.isAnimating = false;
+      this.initialized = false;
+    }
+
+    init() {
+      if (this.initialized) return;
+      this.createItems();
+      this.updatePositions();
+      this.initialized = true;
+    }
+
+    createItems() {
+      this.stage.innerHTML = '';
+      this.items = [];
+
+      this.images.forEach((src, index) => {
+        const item = document.createElement('div');
+        item.className = 'coverflow-item';
+        item.dataset.index = index;
+
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = `Photo ${index + 1}`;
+        img.loading = index < 5 ? 'eager' : 'lazy';
+        img.decoding = 'async';
+
+        const reflection = document.createElement('div');
+        reflection.className = 'reflection';
+        const reflectionImg = document.createElement('img');
+        reflectionImg.src = src;
+        reflectionImg.alt = '';
+        reflectionImg.loading = 'lazy';
+        reflection.appendChild(reflectionImg);
+
+        item.appendChild(img);
+        item.appendChild(reflection);
+        this.stage.appendChild(item);
+        this.items.push(item);
+      });
+    }
+
+    updatePositions() {
+      const sideOffset = 28;
+      const sideAngle = 70;
+      const baseGap = 50;
+
+      this.items.forEach((item, index) => {
+        const diff = index - this.currentIndex;
+        let transform, opacity, zIndex;
+
+        if (diff === 0) {
+          transform = `translate(-50%, -50%) translateX(0) translateZ(50px) rotateY(0deg)`;
+          opacity = 1;
+          zIndex = 100;
+        } else if (diff < 0) {
+          const stackPos = Math.abs(diff) - 1;
+          const offset = -baseGap - (stackPos * sideOffset);
+          const z = -20 - (stackPos * 10);
+          transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(${sideAngle}deg)`;
+          opacity = Math.max(0.85, 1 - Math.abs(diff) * 0.03);
+          zIndex = 50 + diff;
+        } else {
+          const stackPos = diff - 1;
+          const offset = baseGap + (stackPos * sideOffset);
+          const z = -20 - (stackPos * 10);
+          transform = `translate(-50%, -50%) translateX(${offset}px) translateZ(${z}px) rotateY(-${sideAngle}deg)`;
+          opacity = Math.max(0.85, 1 - diff * 0.03);
+          zIndex = 50 - diff;
+        }
+
+        if (Math.abs(diff) > 6) {
+          opacity = 0;
+        }
+
+        item.style.transform = transform;
+        item.style.opacity = opacity;
+        item.style.zIndex = zIndex;
+      });
+    }
+
+    goTo(index) {
+      if (this.isAnimating) return;
+      index = Math.max(0, Math.min(this.images.length - 1, index));
+      if (index === this.currentIndex) return;
+
+      this.isAnimating = true;
+      this.currentIndex = index;
+      this.updatePositions();
+
+      setTimeout(() => { this.isAnimating = false; }, 400);
+    }
+
+    next() { this.goTo(this.currentIndex + 1); }
+    prev() { this.goTo(this.currentIndex - 1); }
+  }
+
+  function initCoverFlow() {
+    const container = document.getElementById('coverflow');
+    if (!container || coverFlow) return;
+    coverFlow = new CoverFlow(container, photoList);
+    coverFlow.init();
+  }
+
+  // ============================================
   // State
   // ============================================
   const state = {
@@ -99,6 +236,7 @@
     'music': 'Music',
     'music-album': 'Liim Lasalle Loves You',
     'music-player': 'Now Playing',
+    'photos': 'Photos',
     'about': 'About',
     'shows': 'Shows',
     'show-1': 'Show Details',
@@ -416,9 +554,13 @@
         state.hasMoved = true;
         const direction = state.accumulatedAngle > 0 ? 1 : -1;
 
-        // If on music player screen, control volume instead
+        // Handle different screens
         if (state.currentScreen === 'music-player') {
           adjustVolume(direction);
+        } else if (state.currentScreen === 'photos' && coverFlow) {
+          if (direction > 0) coverFlow.next();
+          else coverFlow.prev();
+          haptic('light');
         } else {
           scrollMenu(direction);
         }
@@ -461,9 +603,13 @@
         state.hasMoved = true;
         const direction = state.accumulatedAngle > 0 ? 1 : -1;
 
+        // Handle different screens
         if (state.currentScreen === 'music-player') {
-          // Clockwise = volume up, Counter-clockwise = volume down
           adjustVolume(direction);
+        } else if (state.currentScreen === 'photos' && coverFlow) {
+          if (direction > 0) coverFlow.next();
+          else coverFlow.prev();
+          haptic('light');
         } else {
           scrollMenu(direction);
         }
@@ -813,6 +959,11 @@
       preloadAllPlaylistVideos();
     }
 
+    // Initialize Cover Flow when entering Photos
+    if (screenId === 'photos') {
+      setTimeout(initCoverFlow, 100);
+    }
+
     setTimeout(() => {
       currentScreen.classList.remove('exit-left');
     }, 300);
@@ -908,7 +1059,10 @@
         const direction = scrollAccumulator > 0 ? 1 : -1;
 
         if (state.currentScreen === 'music-player') {
-          adjustVolume(direction); // Scroll up = volume up
+          adjustVolume(direction);
+        } else if (state.currentScreen === 'photos' && coverFlow) {
+          if (direction > 0) coverFlow.next();
+          else coverFlow.prev();
         } else {
           scrollMenu(direction);
         }
@@ -926,6 +1080,8 @@
       case 'ArrowUp':
         if (state.currentScreen === 'music-player') {
           adjustVolume(1);
+        } else if (state.currentScreen === 'photos' && coverFlow) {
+          coverFlow.prev();
         } else {
           scrollMenu(-1);
         }
@@ -934,6 +1090,8 @@
       case 'ArrowDown':
         if (state.currentScreen === 'music-player') {
           adjustVolume(-1);
+        } else if (state.currentScreen === 'photos' && coverFlow) {
+          coverFlow.next();
         } else {
           scrollMenu(1);
         }
@@ -954,11 +1112,19 @@
         e.preventDefault();
         break;
       case 'ArrowLeft':
-        previousTrack();
+        if (state.currentScreen === 'photos' && coverFlow) {
+          coverFlow.prev();
+        } else {
+          previousTrack();
+        }
         e.preventDefault();
         break;
       case 'ArrowRight':
-        nextTrack();
+        if (state.currentScreen === 'photos' && coverFlow) {
+          coverFlow.next();
+        } else {
+          nextTrack();
+        }
         e.preventDefault();
         break;
     }
