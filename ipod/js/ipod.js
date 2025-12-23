@@ -1047,8 +1047,11 @@
 
     if (!prevScreen) return;
 
+    // Current screen slides out to right
     currentScreen.classList.remove('active');
+    currentScreen.classList.add('exit-right');
 
+    // Previous screen slides in from left
     prevScreen.classList.remove('exit-left');
     prevScreen.classList.add('active');
 
@@ -1056,6 +1059,11 @@
     state.selectedIndex = previous.selectedIndex;
 
     updateHeader();
+
+    // Clean up exit-right class after animation
+    setTimeout(() => {
+      currentScreen.classList.remove('exit-right');
+    }, 300);
 
     setTimeout(() => {
       const menuList = prevScreen.querySelector('.menu-list');
