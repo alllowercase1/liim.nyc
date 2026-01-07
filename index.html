@@ -531,6 +531,22 @@
                mouseY >= rect.top && mouseY <= rect.bottom;
       }
 
+      function handleHover(e) {
+        if (animationTriggered) return;
+
+        const over = isOverIpod(e.clientX, e.clientY);
+
+        if (over) {
+          ipodOnly.style.opacity = '0';
+          ipodInHand.style.transition = 'none';
+          ipodInHand.style.opacity = '1';
+        } else {
+          ipodOnly.style.opacity = '1';
+          ipodInHand.style.transition = 'none';
+          ipodInHand.style.opacity = '0';
+        }
+      }
+
       function zoomIn() {
         animationTriggered = true;
 
@@ -594,6 +610,7 @@
 
       ipodOnly.style.opacity = '1';
 
+      document.addEventListener('mousemove', handleHover);
       document.addEventListener('click', handleClick);
     })();
   </script>
