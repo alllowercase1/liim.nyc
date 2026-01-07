@@ -597,9 +597,11 @@
         if (over) {
           ipodOnly.style.opacity = '0';
           emptyHand.style.opacity = '0';
+          ipodInHand.style.transition = 'none';
           ipodInHand.style.opacity = '1';
         } else {
           ipodOnly.style.opacity = '1';
+          ipodInHand.style.transition = 'none';
           ipodInHand.style.opacity = '0';
         }
       }
@@ -609,9 +611,14 @@
 
         ipodOnly.style.opacity = '0';
         emptyHand.style.opacity = '0';
+        ipodInHand.style.transition = 'none';
         ipodInHand.style.opacity = '1';
-        ipodInHand.style.transition = 'transform 2s ease-in-out';
-        ipodInHand.style.transform = 'translateY(59vh) translate(-50%, -50%) scale(4.8) rotate(11deg)';
+
+        // Small delay then start transform animation
+        setTimeout(() => {
+          ipodInHand.style.transition = 'transform 2s ease-in-out';
+          ipodInHand.style.transform = 'translateY(59vh) translate(-50%, -50%) scale(4.8) rotate(11deg)';
+        }, 10);
 
         setTimeout(() => {
           ipodWrapper.classList.add('visible');
