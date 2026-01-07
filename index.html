@@ -20,271 +20,652 @@
 
   <title>Liim Lasalle</title>
   <link rel="icon" type="image/png" href="ipod/assets/music/Liim Lasalle Loves You/Liim Lasalle Loves You 2.png">
-  <link rel="stylesheet" href="ipod/css/ipod.css?v=45">
+  <link rel="stylesheet" href="ipod/css/ipod.css?v=46">
+  <style>
+    /* Base styles */
+    body {
+      background: #000;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .page-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('ipod/assets/images/table-background.JPG') center center / cover no-repeat;
+      z-index: 0;
+    }
+
+    /* ============================================
+       Animation Container
+       ============================================ */
+    .animation-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Frame 1: iPod sitting alone */
+    .ipod-only {
+      position: absolute;
+      width: 180px;
+      left: 50%;
+      top: 60%;
+      transform: translate(-50%, -50%) rotate(-11deg);
+      opacity: 1;
+      z-index: 10;
+      transition: opacity 0.1s ease-out;
+      filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
+    }
+
+    /* Frame 2: Empty hand - layered BEHIND iPod */
+    .empty-hand {
+      position: absolute;
+      width: 780px;
+      left: 63%;
+      top: 100%;
+      transform: translateX(-50%) rotate(-5deg);
+      opacity: 0;
+      z-index: 5;
+      transition: top 0.15s ease-out, left 0.15s ease-out, opacity 0.15s ease-out, transform 0.15s ease-out;
+    }
+
+    .empty-hand.visible {
+      opacity: 1;
+    }
+
+    /* Frame 3: iPod in hand */
+    .ipod-in-hand {
+      position: absolute;
+      width: 450px;
+      left: 50%;
+      top: 80%;
+      transform: translate(-50%, -50%) scale(1.3) rotate(0deg);
+      opacity: 0;
+      z-index: 15;
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+      transition: opacity 0.2s ease-out;
+    }
+
+
+    /* ============================================
+       Interactive Overlay
+       ============================================ */
+    .ipod-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease-out;
+    }
+
+    .ipod-wrapper.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Container matches final animation position */
+    .ipod-interactive {
+      position: absolute;
+      width: 450px;
+      left: 50%;
+      top: 139%;
+      transform: translate(-50%, -50%) scale(4.8) rotate(11deg);
+    }
+
+    /* Overlay container */
+    .ipod-overlay {
+      position: relative;
+      width: 100%;
+    }
+
+    .ipod-overlay .ipod-base-image {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* Screen positioning - larger base size, scaled down to fit */
+    .ipod-overlay .ipod-screen {
+      position: absolute !important;
+      top: 16.9% !important;
+      left: 31.8% !important;
+      width: 90.9% !important;
+      height: 46.7% !important;
+      margin: 0 !important;
+      border-radius: 2px !important;
+      overflow: hidden !important;
+      box-shadow: inset 0 0 20px 8px rgba(0,0,0,0.5) !important;
+      transform: rotate(-12.7deg) scale(0.207) !important;
+      transform-origin: top left !important;
+      /* Preserve flexbox layout */
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .ipod-overlay .ipod-frame-mask {
+      display: block;
+      width: 100%;
+      height: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 10000;
+    }
+
+    .ipod-wrapper.visible .ipod-base-image {
+      opacity: 0;
+    }
+
+    .ipod-overlay .ipod-screen .screen-header {
+      flex-shrink: 0 !important;
+    }
+
+    .ipod-overlay .ipod-screen .screen-content {
+      flex: 1 !important;
+      overflow: hidden !important;
+    }
+
+    .ipod-overlay .ipod-screen .menu-list {
+      overflow-y: auto !important;
+      height: 100% !important;
+    }
+
+    /* Fix cover flow positioning and size */
+    .ipod-overlay .ipod-screen .coverflow-container {
+      height: 100% !important;
+    }
+
+    .ipod-overlay .ipod-screen .coverflow-stage {
+      top: 15% !important;
+      height: 60% !important;
+    }
+
+    .ipod-overlay .ipod-screen .coverflow-item {
+      width: 85px !important;
+      height: 85px !important;
+    }
+
+    /* Fix artwork panel positioning for videos/merch */
+    .ipod-overlay .ipod-screen .artwork-panel {
+      height: 100% !important;
+    }
+
+    /* Click wheel positioning */
+    .ipod-overlay .click-wheel {
+      position: absolute !important;
+      top: 27.4% !important;
+      left: 40% !important;
+      transform: none !important;
+      width: 12.8% !important;
+      height: auto !important;
+      aspect-ratio: 1 / 1 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 50% !important;
+    }
+
+    .ipod-overlay .click-wheel::before {
+      display: none !important;
+    }
+
+    .ipod-overlay .center-button {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: 31% !important;
+      height: 31% !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 50% !important;
+      margin: 0 !important;
+    }
+
+    .ipod-overlay .wheel-button {
+      color: transparent !important;
+    }
+
+    /* ============================================
+       Mobile adjustments
+       ============================================ */
+    @media (max-width: 480px) {
+      .ipod-only { width: 35vw; }
+      .empty-hand { width: 90vw; }
+      .ipod-in-hand { width: 90vw; }
+      .ipod-interactive { width: 90vw; }
+    }
+
+    @media (min-width: 481px) and (max-width: 1024px) {
+      .ipod-only { width: 25vw; }
+      .empty-hand { width: 60vw; }
+      .ipod-in-hand { width: 60vw; }
+      .ipod-interactive { width: 60vw; }
+    }
+  </style>
 </head>
 <body>
   <div class="page-background"></div>
 
-  <div class="ipod-device">
-    <!-- Screen -->
-    <div class="ipod-screen">
-      <!-- Header Bar -->
-      <div class="screen-header">
-        <span class="header-title">iPod</span>
-        <span class="header-status">
-          <span class="play-indicator" id="header-play-indicator"></span>
-          <span class="header-battery">
-            <svg width="20" height="10" viewBox="0 0 20 10">
-              <rect x="0" y="0" width="18" height="10" rx="1" fill="none" stroke="#333" stroke-width="1"/>
-              <rect x="18" y="3" width="2" height="4" fill="#333"/>
-              <rect class="battery-fill" x="2" y="2" width="3" height="6" fill="#ff3b30"/>
-            </svg>
-          </span>
-        </span>
-      </div>
+  <!-- Animation layers -->
+  <div class="animation-container">
+    <img class="ipod-only" src="ipod/assets/images/ipod.png" alt="">
+    <img class="empty-hand" src="ipod/assets/images/empty hand_angle_longer.png" alt="">
+    <img class="ipod-in-hand" src="ipod/assets/images/ipod in hand_longer.png" alt="">
+  </div>
 
-      <!-- Screen Content Container -->
-      <div class="screen-content">
-        <!-- Main Menu -->
-        <div class="menu-screen active" data-screen="main">
-          <div class="menu-list">
-            <div class="menu-item" data-target="music">Music</div>
-            <div class="menu-item" data-target="photos">Photos</div>
-            <div class="menu-item" data-target="videos">Videos</div>
-            <div class="menu-item" data-target="shows">Shows</div>
-            <div class="menu-item" data-target="merch">Merch</div>
-            <div class="menu-item" data-target="news">News</div>
-            <div class="menu-item" data-target="about">About</div>
-            <div class="menu-item" data-target="contact">Contact</div>
+  <!-- Interactive overlay -->
+  <div class="ipod-wrapper" id="ipodWrapper">
+    <div class="ipod-interactive">
+      <div class="ipod-overlay">
+        <!-- Base iPod image -->
+        <img class="ipod-base-image" src="ipod/assets/images/ipod in hand_longer.png" alt="">
+        <img class="ipod-frame-mask" src="ipod/assets/images/ipod in hand_longer_no_screen.png" alt="">
+
+        <!-- Screen -->
+        <div class="ipod-screen">
+          <div class="screen-header">
+            <span class="header-title">iPod</span>
+            <span class="header-status">
+              <span class="play-indicator" id="header-play-indicator"></span>
+              <span class="header-battery">
+                <svg width="20" height="10" viewBox="0 0 20 10">
+                  <rect x="0" y="0" width="18" height="10" rx="1" fill="none" stroke="#333" stroke-width="1"/>
+                  <rect x="18" y="3" width="2" height="4" fill="#333"/>
+                  <rect class="battery-fill" x="2" y="2" width="3" height="6" fill="#ff3b30"/>
+                </svg>
+              </span>
+            </span>
           </div>
-        </div>
-
-        <!-- Music Menu -->
-        <div class="menu-screen" data-screen="music">
-          <div class="menu-list">
-            <div class="menu-item" data-target="music-player">Now Playing</div>
-            <div class="menu-item" data-target="music-album">Liim Lasalle Loves You</div>
-          </div>
-        </div>
-
-        <!-- Album Track List -->
-        <div class="menu-screen" data-screen="music-album">
-          <div class="menu-list">
-            <div class="menu-item track-item" data-track="0">Radio Advice</div>
-            <div class="menu-item track-item" data-track="1">For The Both Of Us</div>
-            <div class="menu-item track-item" data-track="2">Clutching My Breaks</div>
-            <div class="menu-item track-item" data-track="3">Mezcal</div>
-            <div class="menu-item track-item" data-track="4">Why Why</div>
-            <div class="menu-item track-item" data-track="5">Hope</div>
-            <div class="menu-item track-item" data-track="6">Two Summers</div>
-            <div class="menu-item track-item" data-track="7">Shams Love Song</div>
-            <div class="menu-item track-item" data-track="8">Sahara Freestyle</div>
-            <div class="menu-item track-item" data-track="9">Rollin Around</div>
-            <div class="menu-item track-item" data-track="10">Break</div>
-            <div class="menu-item track-item" data-track="11">Le Pouvoir Noir (ft. N8SHO)</div>
-            <div class="menu-item track-item" data-track="12">Playin Yoself</div>
-            <div class="menu-item track-item" data-track="13">Doin Thangs</div>
-            <div class="menu-item track-item" data-track="14">Important To Ya</div>
-            <div class="menu-item track-item" data-track="15">Kicked Rocks</div>
-            <div class="menu-item track-item" data-track="16">Liim Lasalle Loves You</div>
-          </div>
-        </div>
-
-        <!-- Music Player Screen -->
-        <div class="menu-screen" data-screen="music-player">
-          <div class="music-player-container">
-            <div class="now-playing-top">
-              <div class="now-playing-art">
-                <img id="now-playing-cover" src="ipod/assets/images/no-album-art.png" alt="Album Art">
-              </div>
-              <div class="now-playing-info">
-                <div class="now-playing-title" id="now-playing-title">No Track Selected</div>
-                <div class="now-playing-artist" id="now-playing-artist"></div>
-                <div class="now-playing-album" id="now-playing-album"></div>
-                <div class="now-playing-stars" id="now-playing-stars"></div>
-                <div class="now-playing-tracknum" id="track-number"></div>
+          <div class="screen-content">
+            <!-- Main Menu -->
+            <div class="menu-screen active" data-screen="main">
+              <div class="menu-list">
+                <div class="menu-item" data-target="music">Music</div>
+                <div class="menu-item" data-target="photos">Photos</div>
+                <div class="menu-item" data-target="videos">Videos</div>
+                <div class="menu-item" data-target="shows">Shows</div>
+                <div class="menu-item" data-target="merch">Merch</div>
+                <div class="menu-item" data-target="news">News</div>
+                <div class="menu-item" data-target="about">About</div>
+                <div class="menu-item" data-target="contact">Contact</div>
               </div>
             </div>
-            <div class="now-playing-bottom">
-              <div class="now-playing-times">
-                <span id="current-time">0:00</span>
-                <span id="remaining-time">-0:00</span>
+
+            <!-- Music Menu -->
+            <div class="menu-screen" data-screen="music">
+              <div class="menu-list">
+                <div class="menu-item" data-target="music-player">Now Playing</div>
+                <div class="menu-item" data-target="music-album">Liim Lasalle Loves You</div>
               </div>
-              <div class="now-playing-bar">
-                <div class="progress-track">
-                  <div class="progress-fill" id="progress-fill"></div>
-                  <div class="progress-diamond" id="progress-diamond"></div>
+            </div>
+
+            <!-- Album Track List -->
+            <div class="menu-screen" data-screen="music-album">
+              <div class="menu-list">
+                <div class="menu-item track-item" data-track="0">Radio Advice</div>
+                <div class="menu-item track-item" data-track="1">For The Both Of Us</div>
+                <div class="menu-item track-item" data-track="2">Clutching My Breaks</div>
+                <div class="menu-item track-item" data-track="3">Mezcal</div>
+                <div class="menu-item track-item" data-track="4">Why Why</div>
+                <div class="menu-item track-item" data-track="5">Hope</div>
+                <div class="menu-item track-item" data-track="6">Two Summers</div>
+                <div class="menu-item track-item" data-track="7">Shams Love Song</div>
+                <div class="menu-item track-item" data-track="8">Sahara Freestyle</div>
+                <div class="menu-item track-item" data-track="9">Rollin Around</div>
+                <div class="menu-item track-item" data-track="10">Break</div>
+                <div class="menu-item track-item" data-track="11">Le Pouvoir Noir (ft. N8SHO)</div>
+                <div class="menu-item track-item" data-track="12">Playin Yoself</div>
+                <div class="menu-item track-item" data-track="13">Doin Thangs</div>
+                <div class="menu-item track-item" data-track="14">Important To Ya</div>
+                <div class="menu-item track-item" data-track="15">Kicked Rocks</div>
+                <div class="menu-item track-item" data-track="16">Liim Lasalle Loves You</div>
+              </div>
+            </div>
+
+            <!-- Music Player Screen -->
+            <div class="menu-screen" data-screen="music-player">
+              <div class="music-player-container">
+                <div class="now-playing-top">
+                  <div class="now-playing-art">
+                    <img id="now-playing-cover" src="ipod/assets/images/no-album-art.png" alt="Album Art">
+                  </div>
+                  <div class="now-playing-info">
+                    <div class="now-playing-title" id="now-playing-title">No Track Selected</div>
+                    <div class="now-playing-artist" id="now-playing-artist"></div>
+                    <div class="now-playing-album" id="now-playing-album"></div>
+                    <div class="now-playing-stars" id="now-playing-stars"></div>
+                    <div class="now-playing-tracknum" id="track-number"></div>
+                  </div>
+                </div>
+                <div class="now-playing-bottom">
+                  <div class="now-playing-times">
+                    <span id="current-time">0:00</span>
+                    <span id="remaining-time">-0:00</span>
+                  </div>
+                  <div class="now-playing-bar">
+                    <div class="progress-track">
+                      <div class="progress-fill" id="progress-fill"></div>
+                      <div class="progress-diamond" id="progress-diamond"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <!-- Photos Screen (Cover Flow) -->
+            <div class="menu-screen" data-screen="photos">
+              <div class="coverflow-container" id="coverflow">
+                <div class="coverflow-stage" id="coverflow-stage"></div>
+                <div class="coverflow-reflection-floor"></div>
+              </div>
+            </div>
+
+            <!-- About Screen -->
+            <div class="menu-screen" data-screen="about">
+              <div class="content-view about-view">
+                <div class="about-hero">
+                  <img src="ipod/assets/images/hero.png" alt="Liim Lasalle">
+                </div>
+                <div class="about-text">
+                  <h2>Liim Lasalle</h2>
+                  <p>Liim is a Harlem-raised artist known for his genre-blurring sound that fuses hip-hop, soul, and alternative textures. Built from dissonant jazz loops, ghostly soul fragments, and loose, freeform lyricism, Liim's music carries the emotional weight and restlessness of New York City as it's actually lived in. Beginning in 2022, he released a series of singles including "Petty Pete," "Edward 40 Handz," "Mezcal," and "Why Why," leading into his debut project, Liim Lasalle Loves You.</p>
+                  <p>The album unfolds like a quiet coming-of-age story. It lingers on the uncertainty of early adulthood—the shifting dynamics of relationships and the life lessons that come with growing up. His writing is confessional, carried by production that bends and reshapes itself as emotions shift.</p>
+                  <p>Liim moves fluidly in NYC's creative scene between music, fashion, and visual art—modeling for Gucci, Adidas, and Supreme, while documenting his world through a camcorder lens. Liim's lyrical perspective is telling of a wisdom far surpassing his years. He is not only a musician, but a pioneering creative in New York's contemporary creative scene.</p>
+                  <p class="site-credit">website by alllowercase</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shows Screen -->
+            <div class="menu-screen" data-screen="shows">
+              <div class="menu-list" id="shows-list">
+                <div class="menu-item show-item loading-item">
+                  <span>Loading shows...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Merch Screen -->
+            <div class="menu-screen has-artwork" data-screen="merch">
+              <div class="menu-list">
+                <div class="menu-item merch-item sold-out" data-thumb="ipod/assets/images/LLLY Shirt (White).jpeg.webp">
+                  <span class="merch-name">Liim Lasalle Loves You Tee (Sold Out)</span>
+                </div>
+              </div>
+              <div class="artwork-panel">
+                <img id="merch-artwork" src="ipod/assets/images/LLLY Shirt (White).jpeg.webp" alt="Merch image">
+              </div>
+            </div>
+
+            <!-- Videos Menu Screen -->
+            <div class="menu-screen" data-screen="videos">
+              <div class="menu-list" id="playlists-list">
+                <div class="menu-item" data-target="videos-all">
+                  <span>All Videos</span>
+                </div>
+                <div class="menu-item loading-item">
+                  <span>Loading playlists...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- All Videos Screen -->
+            <div class="menu-screen has-artwork" data-screen="videos-all">
+              <div class="menu-list" id="all-videos-list">
+                <div class="menu-item video-item loading-item">
+                  <span>Loading videos...</span>
+                </div>
+              </div>
+              <div class="artwork-panel">
+                <img id="all-videos-artwork" src="" alt="Video thumbnail">
+              </div>
+            </div>
+
+            <!-- Video Player Screen -->
+            <div class="menu-screen" data-screen="video-player">
+              <div class="video-player-container">
+                <div class="video-embed-wrapper">
+                  <iframe id="video-embed" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+              </div>
+            </div>
+
+            <!-- News Screen -->
+            <div class="menu-screen" data-screen="news">
+              <div class="menu-list">
+                <div class="menu-item news-item" data-href="https://officemagazine.net/liim-lasalle-future">
+                  <span class="news-source">Office Magazine</span>
+                  <span class="news-headline">Liim Lasalle Is the Future</span>
+                  <span class="news-preview">The 22-year-old Harlem rapper discusses his debut album and creative process...</span>
+                </div>
+                <div class="menu-item news-item" data-href="https://hypebeast.com/2025/12/liim-lasalle-loves-you-album-interview">
+                  <span class="news-source">Hypebeast</span>
+                  <span class="news-headline">Liim Lasalle Is Just Like You</span>
+                  <span class="news-preview">The skater-turned-Supreme-model-turned-musician is taking his love songs across the five boroughs...</span>
+                </div>
+                <div class="menu-item news-item" data-href="https://www.billboard.com/music/rb-hip-hop/liim-billboard-hip-hop-rookie-of-the-month-november-2025-1236098831/">
+                  <span class="news-source">Billboard</span>
+                  <span class="news-headline">Hip-Hop Rookie of the Month</span>
+                  <span class="news-preview">The Harlem artist on his genre-bending sound and NYC roots...</span>
+                </div>
+                <div class="menu-item news-item" data-href="https://www.bet.com/article/hjqjah/liim-lasalle-opens-up-on-love-loss-and-his-debut-album-liim-lasalle-loves-you">
+                  <span class="news-source">BET</span>
+                  <span class="news-headline">Opens Up on Love, Loss and His Debut Album</span>
+                  <span class="news-preview">Liim discusses the personal stories behind 'Liim Lasalle Loves You'...</span>
+                </div>
+                <div class="menu-item news-item" data-href="https://www.rollingstone.com/music/music-features/liim-new-york-rapper-debut-album-interview-1235425442/">
+                  <span class="news-source">Rolling Stone</span>
+                  <span class="news-headline">Ready to Take Over New York</span>
+                  <span class="news-preview">Meet the 22-year-old reshaping hip-hop with jazz and soul...</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Article Viewer Screen -->
+            <div class="menu-screen" data-screen="article-viewer">
+              <div class="article-viewer-container">
+                <div class="article-title" id="article-viewer-title">Loading...</div>
+                <div class="article-embed-wrapper">
+                  <iframe id="article-embed" src="" frameborder="0"></iframe>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Screen -->
+            <div class="menu-screen" data-screen="contact">
+              <div class="menu-list">
+                <div class="menu-item" data-target="contact-socials">Socials</div>
+                <div class="menu-item" data-target="contact-streaming">Streaming</div>
+              </div>
+            </div>
+
+            <!-- Socials Screen -->
+            <div class="menu-screen" data-screen="contact-socials">
+              <div class="menu-list">
+                <div class="menu-item contact-item" data-href="https://www.instagram.com/liimnotliim/">Instagram</div>
+                <div class="menu-item contact-item" data-href="https://www.tiktok.com/@liimlasallelovesyou">TikTok</div>
+                <div class="menu-item contact-item" data-href="https://www.youtube.com/@LiimLasalle">YouTube</div>
+                <div class="menu-item contact-item" data-href="https://x.com/LiimLasalle">X</div>
+                <div class="menu-item contact-item" data-href="mailto:mgmt@liim.nyc">Email</div>
+              </div>
+            </div>
+
+            <!-- Streaming Screen -->
+            <div class="menu-screen" data-screen="contact-streaming">
+              <div class="menu-list">
+                <div class="menu-item contact-item" data-href="https://open.spotify.com/artist/4WBs3HlXxMAqo8Yi6m1PCM?si=3r6U522pSEqgWTboiiJYAw">Spotify</div>
+                <div class="menu-item contact-item" data-href="https://music.apple.com/us/artist/liim/1606532881">Apple Music</div>
+                <div class="menu-item contact-item" data-href="https://soundcloud.com/liim">SoundCloud</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Photos Screen (Cover Flow) -->
-        <div class="menu-screen" data-screen="photos">
-          <div class="coverflow-container" id="coverflow">
-            <div class="coverflow-stage" id="coverflow-stage"></div>
-            <div class="coverflow-reflection-floor"></div>
+        <!-- Click Wheel -->
+        <div class="click-wheel" id="clickWheel">
+          <div class="wheel-button menu-btn" data-action="menu">MENU</div>
+          <div class="wheel-button prev-btn" data-action="prev">
+            <svg width="18" height="12" viewBox="0 0 18 12"><polygon points="9,0 9,12 0,6" fill="currentColor"/><polygon points="18,0 18,12 9,6" fill="currentColor"/></svg>
           </div>
-        </div>
-
-        <!-- About Screen -->
-        <div class="menu-screen" data-screen="about">
-          <div class="content-view about-view">
-            <div class="about-hero">
-              <img src="ipod/assets/images/hero.png" alt="Liim Lasalle">
-            </div>
-            <div class="about-text">
-              <h2>Liim Lasalle</h2>
-              <p>Liim is a Harlem-raised artist known for his genre-blurring sound that fuses hip-hop, soul, and alternative textures. Built from dissonant jazz loops, ghostly soul fragments, and loose, freeform lyricism, Liim's music carries the emotional weight and restlessness of New York City as it's actually lived in. Beginning in 2022, he released a series of singles including "Petty Pete," "Edward 40 Handz," "Mezcal," and "Why Why," leading into his debut project, Liim Lasalle Loves You.</p>
-              <p>The album unfolds like a quiet coming-of-age story. It lingers on the uncertainty of early adulthood—the shifting dynamics of relationships and the life lessons that come with growing up. His writing is confessional, carried by production that bends and reshapes itself as emotions shift.</p>
-              <p>Liim moves fluidly in NYC's creative scene between music, fashion, and visual art—modeling for Gucci, Adidas, and Supreme, while documenting his world through a camcorder lens. Liim's lyrical perspective is telling of a wisdom far surpassing his years. He is not only a musician, but a pioneering creative in New York's contemporary creative scene.</p>
-              <p class="site-credit">website by alllowercase</p>
-            </div>
+          <div class="wheel-button next-btn" data-action="next">
+            <svg width="18" height="12" viewBox="0 0 18 12"><polygon points="0,0 9,6 0,12" fill="currentColor"/><polygon points="9,0 18,6 9,12" fill="currentColor"/></svg>
           </div>
-        </div>
-
-        <!-- Shows Screen -->
-        <div class="menu-screen" data-screen="shows">
-          <div class="menu-list" id="shows-list">
-            <div class="menu-item show-item loading-item">
-              <span>Loading shows...</span>
-            </div>
+          <div class="wheel-button play-btn" data-action="play">
+            <svg width="20" height="12" viewBox="0 0 20 12"><polygon points="0,0 7,6 0,12" fill="currentColor"/><rect x="10" y="0" width="3" height="12" fill="currentColor"/><rect x="16" y="0" width="3" height="12" fill="currentColor"/></svg>
           </div>
-        </div>
-
-        <!-- Merch Screen -->
-        <div class="menu-screen has-artwork" data-screen="merch">
-          <div class="menu-list">
-            <div class="menu-item merch-item sold-out" data-thumb="ipod/assets/images/LLLY Shirt (White).jpeg.webp">
-              <span class="merch-name">Liim Lasalle Loves You Tee (Sold Out)</span>
-            </div>
-          </div>
-          <div class="artwork-panel">
-            <img id="merch-artwork" src="ipod/assets/images/LLLY Shirt (White).jpeg.webp" alt="Merch image">
-          </div>
-        </div>
-
-        <!-- Videos Menu Screen -->
-        <div class="menu-screen" data-screen="videos">
-          <div class="menu-list" id="playlists-list">
-            <div class="menu-item" data-target="videos-all">
-              <span>All Videos</span>
-            </div>
-            <div class="menu-item loading-item">
-              <span>Loading playlists...</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- All Videos Screen -->
-        <div class="menu-screen has-artwork" data-screen="videos-all">
-          <div class="menu-list" id="all-videos-list">
-            <div class="menu-item video-item loading-item">
-              <span>Loading videos...</span>
-            </div>
-          </div>
-          <div class="artwork-panel">
-            <img id="all-videos-artwork" src="" alt="Video thumbnail">
-          </div>
-        </div>
-
-        <!-- Video Player Screen -->
-        <div class="menu-screen" data-screen="video-player">
-          <div class="video-player-container">
-            <div class="video-embed-wrapper">
-              <iframe id="video-embed" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-          </div>
-        </div>
-
-        <!-- News Screen -->
-        <div class="menu-screen" data-screen="news">
-          <div class="menu-list">
-            <div class="menu-item news-item" data-href="https://officemagazine.net/liim-lasalle-future">
-              <span class="news-source">Office Magazine</span>
-              <span class="news-headline">Liim Lasalle Is the Future</span>
-              <span class="news-preview">The 22-year-old Harlem rapper discusses his debut album and creative process...</span>
-            </div>
-            <div class="menu-item news-item" data-href="https://hypebeast.com/2025/12/liim-lasalle-loves-you-album-interview">
-              <span class="news-source">Hypebeast</span>
-              <span class="news-headline">Liim Lasalle Is Just Like You</span>
-              <span class="news-preview">The skater-turned-Supreme-model-turned-musician is taking his love songs across the five boroughs...</span>
-            </div>
-            <div class="menu-item news-item" data-href="https://www.billboard.com/music/rb-hip-hop/liim-billboard-hip-hop-rookie-of-the-month-november-2025-1236098831/">
-              <span class="news-source">Billboard</span>
-              <span class="news-headline">Hip-Hop Rookie of the Month</span>
-              <span class="news-preview">The Harlem artist on his genre-bending sound and NYC roots...</span>
-            </div>
-            <div class="menu-item news-item" data-href="https://www.bet.com/article/hjqjah/liim-lasalle-opens-up-on-love-loss-and-his-debut-album-liim-lasalle-loves-you">
-              <span class="news-source">BET</span>
-              <span class="news-headline">Opens Up on Love, Loss and His Debut Album</span>
-              <span class="news-preview">Liim discusses the personal stories behind 'Liim Lasalle Loves You'...</span>
-            </div>
-            <div class="menu-item news-item" data-href="https://www.rollingstone.com/music/music-features/liim-new-york-rapper-debut-album-interview-1235425442/">
-              <span class="news-source">Rolling Stone</span>
-              <span class="news-headline">Ready to Take Over New York</span>
-              <span class="news-preview">Meet the 22-year-old reshaping hip-hop with jazz and soul...</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Article Viewer Screen -->
-        <div class="menu-screen" data-screen="article-viewer">
-          <div class="article-viewer-container">
-            <div class="article-title" id="article-viewer-title">Loading...</div>
-            <div class="article-embed-wrapper">
-              <iframe id="article-embed" src="" frameborder="0"></iframe>
-            </div>
-          </div>
-        </div>
-
-        <!-- Contact Screen -->
-        <div class="menu-screen" data-screen="contact">
-          <div class="menu-list">
-            <div class="menu-item" data-target="contact-socials">Socials</div>
-            <div class="menu-item" data-target="contact-streaming">Streaming</div>
-          </div>
-        </div>
-
-        <!-- Socials Screen -->
-        <div class="menu-screen" data-screen="contact-socials">
-          <div class="menu-list">
-            <div class="menu-item contact-item" data-href="https://www.instagram.com/liimnotliim/">Instagram</div>
-            <div class="menu-item contact-item" data-href="https://www.tiktok.com/@liimlasallelovesyou">TikTok</div>
-            <div class="menu-item contact-item" data-href="https://www.youtube.com/@LiimLasalle">YouTube</div>
-            <div class="menu-item contact-item" data-href="https://x.com/LiimLasalle">X</div>
-            <div class="menu-item contact-item" data-href="mailto:mgmt@liim.nyc">Email</div>
-          </div>
-        </div>
-
-        <!-- Streaming Screen -->
-        <div class="menu-screen" data-screen="contact-streaming">
-          <div class="menu-list">
-            <div class="menu-item contact-item" data-href="https://open.spotify.com/artist/4WBs3HlXxMAqo8Yi6m1PCM?si=3r6U522pSEqgWTboiiJYAw">Spotify</div>
-            <div class="menu-item contact-item" data-href="https://music.apple.com/us/artist/liim/1606532881">Apple Music</div>
-            <div class="menu-item contact-item" data-href="https://soundcloud.com/liim">SoundCloud</div>
-          </div>
+          <button class="center-button" id="centerButton" data-action="select"></button>
         </div>
       </div>
-    </div>
-
-    <!-- Click Wheel -->
-    <div class="click-wheel" id="clickWheel">
-      <div class="wheel-button menu-btn" data-action="menu">MENU</div>
-      <div class="wheel-button prev-btn" data-action="prev">
-        <svg width="18" height="12" viewBox="0 0 18 12"><polygon points="9,0 9,12 0,6" fill="currentColor"/><polygon points="18,0 18,12 9,6" fill="currentColor"/></svg>
-      </div>
-      <div class="wheel-button next-btn" data-action="next">
-        <svg width="18" height="12" viewBox="0 0 18 12"><polygon points="0,0 9,6 0,12" fill="currentColor"/><polygon points="9,0 18,6 9,12" fill="currentColor"/></svg>
-      </div>
-      <div class="wheel-button play-btn" data-action="play">
-        <svg width="20" height="12" viewBox="0 0 20 12"><polygon points="0,0 7,6 0,12" fill="currentColor"/><rect x="10" y="0" width="3" height="12" fill="currentColor"/><rect x="16" y="0" width="3" height="12" fill="currentColor"/></svg>
-      </div>
-      <button class="center-button" id="centerButton" data-action="select"></button>
     </div>
   </div>
 
-  <script src="ipod/js/ipod.js?v=41"></script>
+  <script src="ipod/js/ipod.js?v=42"></script>
+  <script>
+    (function() {
+      const ipodOnly = document.querySelector('.ipod-only');
+      const emptyHand = document.querySelector('.empty-hand');
+      const ipodInHand = document.querySelector('.ipod-in-hand');
+      const ipodWrapper = document.getElementById('ipodWrapper');
+
+      const handStart = { top: 100, left: 63, rotate: -5 };
+      const handEnd = { top: 30, left: 61, rotate: -3 };
+
+      const maxDistance = 400;
+
+      let animationTriggered = false;
+      let isZoomedIn = false;
+
+      function getIpodCenter() {
+        const rect = ipodOnly.getBoundingClientRect();
+        return {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2
+        };
+      }
+
+      function getDistance(mouseX, mouseY) {
+        const center = getIpodCenter();
+        return Math.sqrt(Math.pow(mouseX - center.x, 2) + Math.pow(mouseY - center.y, 2));
+      }
+
+      function isOverIpod(mouseX, mouseY) {
+        const rect = ipodOnly.getBoundingClientRect();
+        return mouseX >= rect.left && mouseX <= rect.right &&
+               mouseY >= rect.top && mouseY <= rect.bottom;
+      }
+
+      function updateHand(e) {
+        if (animationTriggered) return;
+
+        const distance = getDistance(e.clientX, e.clientY);
+        const over = isOverIpod(e.clientX, e.clientY);
+
+        if (distance > maxDistance) {
+          emptyHand.classList.remove('visible');
+          ipodInHand.style.opacity = '0';
+          ipodOnly.style.opacity = '1';
+          return;
+        }
+
+        emptyHand.classList.add('visible');
+
+        const progress = 1 - (distance / maxDistance);
+
+        const top = handStart.top + (handEnd.top - handStart.top) * progress;
+        const left = handStart.left + (handEnd.left - handStart.left) * progress;
+        const rotate = handStart.rotate + (handEnd.rotate - handStart.rotate) * progress;
+
+        emptyHand.style.top = top + '%';
+        emptyHand.style.left = left + '%';
+        emptyHand.style.transform = `translateX(-50%) rotate(${rotate}deg)`;
+
+        if (over) {
+          ipodOnly.style.opacity = '0';
+          emptyHand.style.opacity = '0';
+          ipodInHand.style.opacity = '1';
+        } else {
+          ipodOnly.style.opacity = '1';
+          ipodInHand.style.opacity = '0';
+        }
+      }
+
+      function zoomIn() {
+        animationTriggered = true;
+
+        ipodOnly.style.opacity = '0';
+        emptyHand.style.opacity = '0';
+        ipodInHand.style.opacity = '1';
+        ipodInHand.style.transition = 'transform 2s ease-in-out';
+        ipodInHand.style.transform = 'translateY(59vh) translate(-50%, -50%) scale(4.8) rotate(11deg)';
+
+        setTimeout(() => {
+          ipodWrapper.classList.add('visible');
+          isZoomedIn = true;
+        }, 2000);
+      }
+
+      function zoomOut() {
+        isZoomedIn = false;
+        ipodWrapper.classList.remove('visible');
+        ipodInHand.style.opacity = '1';
+        ipodInHand.style.transition = 'transform 3s ease-in-out';
+        ipodInHand.style.transform = 'translate(-50%, -50%) scale(1.3) rotate(0deg)';
+
+        setTimeout(() => {
+          ipodInHand.style.opacity = '0';
+          ipodOnly.style.opacity = '1';
+          animationTriggered = false;
+        }, 3000);
+      }
+
+      function handleClick(e) {
+        if (isZoomedIn) {
+          // Check if click is outside the iPod screen area
+          const screen = document.querySelector('.ipod-screen');
+          const clickWheel = document.querySelector('.click-wheel');
+          const screenRect = screen.getBoundingClientRect();
+          const wheelRect = clickWheel.getBoundingClientRect();
+
+          const overScreen = e.clientX >= screenRect.left && e.clientX <= screenRect.right &&
+                             e.clientY >= screenRect.top && e.clientY <= screenRect.bottom;
+          const overWheel = e.clientX >= wheelRect.left && e.clientX <= wheelRect.right &&
+                            e.clientY >= wheelRect.top && e.clientY <= wheelRect.bottom;
+
+          if (!overScreen && !overWheel) {
+            zoomOut();
+          }
+          return;
+        }
+
+        if (animationTriggered) return;
+
+        const over = isOverIpod(e.clientX, e.clientY) || ipodInHand.style.opacity === '1';
+
+        if (over) {
+          zoomIn();
+        }
+      }
+
+      ipodOnly.style.opacity = '1';
+
+      document.addEventListener('mousemove', updateHand);
+      document.addEventListener('click', handleClick);
+    })();
+  </script>
 </body>
 </html>
