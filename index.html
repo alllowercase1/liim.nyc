@@ -64,23 +64,7 @@
       filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3));
     }
 
-    /* Frame 2: Empty hand - layered BEHIND iPod */
-    .empty-hand {
-      position: absolute;
-      width: 780px;
-      left: 63%;
-      top: 100%;
-      transform: translateX(-50%) rotate(-5deg);
-      opacity: 0;
-      z-index: 5;
-      transition: top 0.15s ease-out, left 0.15s ease-out, opacity 0.15s ease-out, transform 0.15s ease-out;
-    }
-
-    .empty-hand.visible {
-      opacity: 1;
-    }
-
-    /* Frame 3: iPod in hand */
+    /* Frame 2: iPod in hand */
     .ipod-in-hand {
       position: absolute;
       width: 450px;
@@ -245,14 +229,12 @@
        ============================================ */
     @media (max-width: 480px) {
       .ipod-only { width: 35vw; }
-      .empty-hand { width: 90vw; }
       .ipod-in-hand { width: 90vw; }
       .ipod-interactive { width: 90vw; }
     }
 
     @media (min-width: 481px) and (max-width: 1024px) {
       .ipod-only { width: 25vw; }
-      .empty-hand { width: 60vw; }
       .ipod-in-hand { width: 60vw; }
       .ipod-interactive { width: 60vw; }
     }
@@ -264,7 +246,6 @@
   <!-- Animation layers -->
   <div class="animation-container">
     <img class="ipod-only" src="ipod/assets/images/ipod.png" alt="">
-    <img class="empty-hand" src="ipod/assets/images/empty hand_angle_longer.png" alt="">
     <img class="ipod-in-hand" src="ipod/assets/images/ipod in hand_longer.png" alt="">
   </div>
 
@@ -538,30 +519,11 @@
   <script>
     (function() {
       const ipodOnly = document.querySelector('.ipod-only');
-      const emptyHand = document.querySelector('.empty-hand');
       const ipodInHand = document.querySelector('.ipod-in-hand');
       const ipodWrapper = document.getElementById('ipodWrapper');
 
-      const handStart = { top: 100, left: 63, rotate: -5 };
-      const handEnd = { top: 30, left: 61, rotate: -3 };
-
-      const maxDistance = 400;
-
       let animationTriggered = false;
       let isZoomedIn = false;
-
-      function getIpodCenter() {
-        const rect = ipodOnly.getBoundingClientRect();
-        return {
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2
-        };
-      }
-
-      function getDistance(mouseX, mouseY) {
-        const center = getIpodCenter();
-        return Math.sqrt(Math.pow(mouseX - center.x, 2) + Math.pow(mouseY - center.y, 2));
-      }
 
       function isOverIpod(mouseX, mouseY) {
         const rect = ipodOnly.getBoundingClientRect();
@@ -569,48 +531,10 @@
                mouseY >= rect.top && mouseY <= rect.bottom;
       }
 
-      function updateHand(e) {
-        if (animationTriggered) return;
-
-        const distance = getDistance(e.clientX, e.clientY);
-        const over = isOverIpod(e.clientX, e.clientY);
-
-        if (distance > maxDistance) {
-          emptyHand.classList.remove('visible');
-          ipodInHand.style.opacity = '0';
-          ipodOnly.style.opacity = '1';
-          return;
-        }
-
-        emptyHand.classList.add('visible');
-
-        const progress = 1 - (distance / maxDistance);
-
-        const top = handStart.top + (handEnd.top - handStart.top) * progress;
-        const left = handStart.left + (handEnd.left - handStart.left) * progress;
-        const rotate = handStart.rotate + (handEnd.rotate - handStart.rotate) * progress;
-
-        emptyHand.style.top = top + '%';
-        emptyHand.style.left = left + '%';
-        emptyHand.style.transform = `translateX(-50%) rotate(${rotate}deg)`;
-
-        if (over) {
-          ipodOnly.style.opacity = '0';
-          emptyHand.style.opacity = '0';
-          ipodInHand.style.transition = 'none';
-          ipodInHand.style.opacity = '1';
-        } else {
-          ipodOnly.style.opacity = '1';
-          ipodInHand.style.transition = 'none';
-          ipodInHand.style.opacity = '0';
-        }
-      }
-
       function zoomIn() {
         animationTriggered = true;
 
         ipodOnly.style.opacity = '0';
-        emptyHand.style.opacity = '0';
         ipodInHand.style.transition = 'none';
         ipodInHand.style.opacity = '1';
 
@@ -670,7 +594,6 @@
 
       ipodOnly.style.opacity = '1';
 
-      document.addEventListener('mousemove', updateHand);
       document.addEventListener('click', handleClick);
     })();
   </script>
